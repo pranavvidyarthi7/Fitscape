@@ -1,0 +1,14 @@
+# Visual Studio Code related
+.classpath
+.project
+.settings/
+.vscode/
+
+# flutter
+.dart_tool/
+.flutter-plugins
+.packages
+.pub-cache/
+.pub/
+build/
+pubspec.lock
