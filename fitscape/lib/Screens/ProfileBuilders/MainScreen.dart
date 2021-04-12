@@ -130,7 +130,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   double _percent = 0;
-  int _page = 5; //TODO: CHANGE THIS PAGE TO SEE UR PAGE
+  int _page = 3; //TODO: CHANGE THIS PAGE TO SEE UR PAGE
   // 1:otp
   // 2:male
   // 3:phone
