@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "15825852187",
-    "project_id": "fitscape-21ff5",
-    "storage_bucket": "fitscape-21ff5.appspot.com"
+    "project_number": "835537427782",
+    "project_id": "fitscape-95f5b",
+    "storage_bucket": "fitscape-95f5b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:15825852187:android:08fbab6a395abfa41c25be",
+        "mobilesdk_app_id": "1:835537427782:android:4b45e00615119163c0d947",
         "android_client_info": {
           "package_name": "com.example.fitscape"
         }
       },
       "oauth_client": [
         {
-          "client_id": "15825852187-96po3nra3rrs85tbkpkaupod1lh02d22.apps.googleusercontent.com",
+          "client_id": "835537427782-fqk383jv3shf4oj37a425873imdd2uaq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.fitscape",
@@ -22,20 +22,28 @@
           }
         },
         {
-          "client_id": "15825852187-mja16sc1hpit83v8vc55gqlqe6as6p7j.apps.googleusercontent.com",
+          "client_id": "835537427782-fri1b16rbgsie0qcn92tosck3hpbnrcd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fitscape",
+            "certificate_hash": "579eed4a7ac2ce7000afa27a551461315b93621e"
+          }
+        },
+        {
+          "client_id": "835537427782-btu9t417n85n3r3r82qpqsrp9jom70kb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDjEm7dCUpo5ElwMNsgZVU4NLJLcZa9H9M"
+          "current_key": "AIzaSyBV8KFaPp4tN32dp4ZLKR3wqpuDkXiyHUI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "15825852187-mja16sc1hpit83v8vc55gqlqe6as6p7j.apps.googleusercontent.com",
+              "client_id": "835537427782-btu9t417n85n3r3r82qpqsrp9jom70kb.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

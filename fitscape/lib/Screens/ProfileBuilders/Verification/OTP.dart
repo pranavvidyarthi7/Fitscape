@@ -119,7 +119,7 @@ class _OTPState extends State<OTP> {
           //       // style: josefinSansR18.copyWith(color: Colors.white),
           //     ),
           //   ),
-          // )
+          // ),
         ],
       ),
     );
