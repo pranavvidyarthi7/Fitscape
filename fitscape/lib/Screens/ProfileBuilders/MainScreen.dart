@@ -5,11 +5,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-import '../../ErrorBox.dart';
+import '../../UI Components/ErrorBox.dart';
 import '../../Variables.dart';
 import '../../WidgetResizing.dart';
 import './Verification/PhoneAuth.dart';
 import './Verification/OTP.dart';
+import '../../UI Components/ScrollSelector.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -130,7 +131,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   double _percent = 0;
-  int _page = 3; //TODO: CHANGE THIS PAGE TO SEE UR PAGE
+  int _page = 4; //TODO: CHANGE THIS PAGE TO SEE UR PAGE
   // 1:otp
   // 2:male
   // 3:phone
@@ -301,7 +302,10 @@ class _MainScreenState extends State<MainScreen> {
                                       },
                                     )
                                   : _page == 4
-                                      ? Container(child: Text('Weight'))
+                                      ? Container(
+                                          // decoration: BoxDecoration(
+                                          //     border: Border.all()),
+                                          child: ScrollSelector())
                                       : Container(child: Text('Height')),
                       transitionBuilder: (child, animation) => FadeTransition(
                         opacity: animation,

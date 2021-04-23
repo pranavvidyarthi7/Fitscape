@@ -4,9 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../Screens/Login_Register/AuthScreen.dart';
 import '../Variables.dart';
 import '../WidgetResizing.dart';
-import '../template.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -22,8 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) =>
-            Template(), //TODO: ADD NAVIGATION TO HOME PAGE HERE
+        builder: (BuildContext context) => AuthScreen(),
       ),
     );
   }
@@ -74,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Container(
                 margin: EdgeInsets.only(
                   top: 180 / 6.4 * boxSizeV,
-                  bottom: 45 / 6.4 * boxSizeV,
+                  bottom: 25 / 6.4 * boxSizeV,
                 ),
                 child: Text('By Tecnotuners', style: josefinSansSB22),
               ),
