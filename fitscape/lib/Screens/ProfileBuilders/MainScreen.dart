@@ -1,4 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitscape/Screens/ProfileBuilders/gender_page.dart';
+import 'package:fitscape/Screens/ProfileBuilders/height_page.dart';
+import 'package:fitscape/Screens/ProfileBuilders/weight_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -131,7 +134,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   double _percent = 0;
-  int _page = 4; //TODO: CHANGE THIS PAGE TO SEE UR PAGE
+  int _page = 5; //TODO: CHANGE THIS PAGE TO SEE UR PAGE
   // 1:otp
   // 2:male
   // 3:phone
@@ -288,9 +291,9 @@ class _MainScreenState extends State<MainScreen> {
                                 validate = false;
                             })
                           : _page == 2
-                              ? Container(
-                                  child: Text("GENDER"),
-                                ) //TODO GENDER Page here
+                              ? GenderPage(
+                                  // child: Text("GENDER"),
+                                  ) //TODO GENDER Page here
                               : _page == 3
                                   ? PhoneAuth(
                                       change: (v) {
@@ -302,11 +305,8 @@ class _MainScreenState extends State<MainScreen> {
                                       },
                                     )
                                   : _page == 4
-                                      ? Container(
-                                          // decoration: BoxDecoration(
-                                          //     border: Border.all()),
-                                          child: ScrollSelector())
-                                      : Container(child: Text('Height')),
+                                      ? WeightPage()
+                                      : HeightPage(),
                       transitionBuilder: (child, animation) => FadeTransition(
                         opacity: animation,
                         child: child,

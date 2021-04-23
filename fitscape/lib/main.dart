@@ -1,4 +1,5 @@
 import 'package:fitscape/Screens/ProfileBuilders/MainScreen.dart';
+import 'package:fitscape/Screens/ProfileBuilders/gender_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
     ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainScreen(),
+      home:MainScreen(),
     );
   }
 }
