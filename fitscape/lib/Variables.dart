@@ -5,6 +5,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 SharedPreferences store;
 double boxSizeH;
 double boxSizeV;
+const List<String> emoticons=[
+     '😎',
+     '👻',
+     '😺',
+     '🤠',
+     '🙎🏼‍♀️',
+     '🙎🏻‍♂️',
+     '🦊',
+     '🐼',
+     '😈',
+     '🐵',
+     '🤓',
+     '😇',
+ ];
 //josefinSans
 TextStyle josefinSansSB22 =
     GoogleFonts.josefinSans(fontSize: 25, fontWeight: FontWeight.w600);
