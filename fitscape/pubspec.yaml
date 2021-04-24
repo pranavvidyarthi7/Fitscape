@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  firebase_auth: ^1.0.2
+  firebase_auth: ^1.1.1
   firebase_core: ^1.0.3
   flutter_svg: ^0.21.0
   google_fonts: ^2.0.0
@@ -32,6 +32,7 @@ dependencies:
   intl_phone_number_input: ^0.5.2+2
   otp_text_field: ^1.1.0
   percent_indicator: ^3.0.1
+  provider: ^5.0.0
   scroll_snap_list: ^0.7.0
   shared_preferences: ^2.0.5
 

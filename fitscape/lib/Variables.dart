@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 SharedPreferences store;
 double boxSizeH;
 double boxSizeV;
+//Bangers
+TextStyle bangersSB62 = GoogleFonts.bangers(fontSize: 65);
 //josefinSans
 TextStyle josefinSansSB22 =
     GoogleFonts.josefinSans(fontSize: 25, fontWeight: FontWeight.w600);

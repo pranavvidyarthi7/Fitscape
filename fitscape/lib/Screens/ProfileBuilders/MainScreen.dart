@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitscape/Screens/ProfileBuilders/gender_page.dart';
-import 'package:fitscape/Screens/ProfileBuilders/height_page.dart';
-import 'package:fitscape/Screens/ProfileBuilders/weight_page.dart';
+import 'package:fitscape/UI%20Components/PicScroller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,9 +11,13 @@ import '../../Variables.dart';
 import '../../WidgetResizing.dart';
 import './Verification/PhoneAuth.dart';
 import './Verification/OTP.dart';
-import '../../UI Components/ScrollSelector.dart';
+import '../ProfileBuilders/gender_page.dart';
+import '../ProfileBuilders/height_page.dart';
+import '../ProfileBuilders/weight_page.dart';
 
 class MainScreen extends StatefulWidget {
+  final int page;
+  MainScreen({this.page});
   @override
   _MainScreenState createState() => _MainScreenState();
 }
@@ -133,22 +135,86 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  double _percent = 0;
-  int _page = 5; //TODO: CHANGE THIS PAGE TO SEE UR PAGE
+  double _percent;
+  int _page;
   // 1:otp
-  // 2:male
-  // 3:phone
-  // 4:weight
-  // 5:height
-  void _percentIncrement(double value) {
-    setState(() {
-      _percent += 1 / 4;
-    });
+  // 2:name and pic
+  // 3:male
+  // 4:phone
+  // 5:weight
+  // 6:height
+
+  bool checkOTP() {
+    if (validate) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => WillPopScope(
+          onWillPop: () => Future.delayed(Duration(), () => false),
+          child: Dialog(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ),
+      );
+      bool success = false;
+      // try {
+      //   success = await Provider.of<ServerRequests>(context,
+      //           listen: false)
+      //       .changeOTP(_otp);
+      // } on PlatformException catch (e) {
+      //   //TODO Impliment RESEND OTP BTN
+      //   print(e.code);
+      //   await errorBox(context, e);
+      //   success = false;
+      //   Navigator.pop(context);
+      // }
+      return success;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: Duration(seconds: 1),
+          content: Text(
+            'Enter the complete OTP',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+      return false;
+    }
+  }
+
+  bool checkName() {
+    return true;
+  }
+
+  Future<bool> next() async {
+    switch (_page) {
+      case 1:
+        return checkOTP();
+      case 2:
+        return checkName();
+      case 3:
+      default:
+    }
+  }
+
+  void _percentIncrement() {
+    if (_page <= 6) {
+      setState(() {
+        _percent += 1 / 6;
+      });
+    }
   }
 
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    _page = widget.page ?? 1;
+    _percent = (_page - 1) / 6;
     super.initState();
   }
 
@@ -254,9 +320,9 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   Container(
                     margin: EdgeInsets.only(
-                      top: _page == 4 || _page == 5 ? 22 / 6.4 * boxSizeV : 0,
+                      top: _page == 5 || _page == 6 ? 22 / 6.4 * boxSizeV : 0,
                     ),
-                    child: _page == 4 || _page == 5
+                    child: _page == 5 || _page == 6
                         ? SvgPicture.asset('assets/svg/box.svg',
                             width: 151 / 3.6 * boxSizeH)
                         : null,
@@ -264,19 +330,19 @@ class _MainScreenState extends State<MainScreen> {
                   Container(
                     alignment: Alignment.center,
                     margin: EdgeInsets.only(
-                        top: _page == 4 || _page == 5
+                        top: _page == 5 || _page == 6
                             ? 22 / 6.4 * boxSizeV
                             : 45 / 6.4 * boxSizeV,
                         bottom: 22 / 6.4 * boxSizeV),
                     child: Text(
-                      'Step $_page/7',
+                      'Step $_page/6',
                       style: robotoSB13.copyWith(color: Color(0xff563FE5)),
                     ),
                   ),
                   Container(
                     alignment: Alignment.topCenter,
                     constraints: BoxConstraints(
-                        minHeight: _page == 4 || _page == 5
+                        minHeight: _page == 5 || _page == 6
                             ? 265 / 6.4 * boxSizeV
                             : 390 / 6.4 * boxSizeV),
                     // decoration: BoxDecoration(border: Border.all()),
@@ -291,22 +357,27 @@ class _MainScreenState extends State<MainScreen> {
                                 validate = false;
                             })
                           : _page == 2
-                              ? GenderPage(
-                                  // child: Text("GENDER"),
-                                  ) //TODO GENDER Page here
+                              ? Container(
+                                  height: 100 / 6.4 * boxSizeV,
+                                  // decoration:
+                                  //     BoxDecoration(border: Border.all()),
+                                  child:
+                                      PicScroller()) //TODO: Profile pic and name
                               : _page == 3
-                                  ? PhoneAuth(
-                                      change: (v) {
-                                        phone = v;
-                                        print(phone);
-                                      },
-                                      verify: () {
-                                        phoneVerify();
-                                      },
-                                    )
+                                  ? GenderPage()
                                   : _page == 4
-                                      ? WeightPage()
-                                      : HeightPage(),
+                                      ? PhoneAuth(
+                                          change: (v) {
+                                            phone = v;
+                                            print(phone);
+                                          },
+                                          verify: () {
+                                            phoneVerify();
+                                          },
+                                        )
+                                      : _page == 5
+                                          ? WeightPage()
+                                          : HeightPage(),
                       transitionBuilder: (child, animation) => FadeTransition(
                         opacity: animation,
                         child: child,
@@ -315,8 +386,14 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      if (_page == 3) {
-                        phoneVerify();
+                      bool condition = false;
+                      condition = await next();
+                      if (condition) {
+                        _percentIncrement();
+                        if (_page <= 6)
+                          setState(() {
+                            _page++;
+                          });
                       }
                     },
                     child: Container(
