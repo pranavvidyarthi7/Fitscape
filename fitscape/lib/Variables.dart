@@ -7,6 +7,20 @@ double boxSizeH;
 double boxSizeV;
 //Bangers
 TextStyle bangersSB62 = GoogleFonts.bangers(fontSize: 65);
+const List<String> emoticons = [
+  '😎',
+  '👻',
+  '😺',
+  '🤠',
+  '🙎🏼‍♀️',
+  '🙎🏻‍♂️',
+  '🦊',
+  '🐼',
+  '😈',
+  '🐵',
+  '🤓',
+  '😇',
+];
 //josefinSans
 TextStyle josefinSansSB22 =
     GoogleFonts.josefinSans(fontSize: 25, fontWeight: FontWeight.w600);

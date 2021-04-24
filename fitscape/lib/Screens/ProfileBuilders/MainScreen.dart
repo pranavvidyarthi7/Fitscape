@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitscape/UI%20Components/PicScroller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,6 +13,7 @@ import './Verification/OTP.dart';
 import '../ProfileBuilders/gender_page.dart';
 import '../ProfileBuilders/height_page.dart';
 import '../ProfileBuilders/weight_page.dart';
+import '../ProfileBuilders/profilepic_page.dart';
 
 class MainScreen extends StatefulWidget {
   final int page;
@@ -357,12 +357,9 @@ class _MainScreenState extends State<MainScreen> {
                                 validate = false;
                             })
                           : _page == 2
-                              ? Container(
-                                  height: 100 / 6.4 * boxSizeV,
-                                  // decoration:
-                                  //     BoxDecoration(border: Border.all()),
-                                  child:
-                                      PicScroller()) //TODO: Profile pic and name
+                              ? ProfilePicPage(
+                                  // child: Text("GENDER"),
+                                  ) //TODO GENDER Page here
                               : _page == 3
                                   ? GenderPage()
                                   : _page == 4
