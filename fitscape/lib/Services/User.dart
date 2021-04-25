@@ -6,6 +6,7 @@ class AppUser {
   String _email;
   String _password;
   String _phone;
+  String _gender;
   String weight;
   String height;
   String photoURL;
@@ -33,6 +34,10 @@ class AppUser {
 
   void setName(String name) {
     this._name = name;
+  }
+
+  void setGender(String gender) {
+    this._gender = gender ?? this._gender;
   }
 
   void fromServer(String json) {
@@ -76,6 +81,7 @@ class AppUser {
     print(this._email);
     print(this._password);
     print('phone ${this._phone}');
+    print(this.photoURL);
     print(this.weight);
     print('DETAILS END');
   }

@@ -1,17 +1,16 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitscape/Screens/ProfileBuilders/MainScreen.dart';
-import 'package:fitscape/Screens/ProfileBuilders/Verification/OTP.dart';
-import 'package:fitscape/Screens/ProfileBuilders/Verification/PhoneAuth.dart';
 import 'package:fitscape/Services/ServerRequests.dart';
-import 'package:fitscape/Services/User.dart';
-import 'package:fitscape/Services/auth.dart';
-import 'package:fitscape/UI%20Components/ErrorBox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
+import '../../Services/User.dart';
+import '../../Services/auth.dart';
+import '../../UI%20Components/ErrorBox.dart';
+import '../../Screens/ProfileBuilders/MainScreen.dart';
 import '../../Variables.dart';
 import '../../WidgetResizing.dart';
 
@@ -34,6 +33,7 @@ class _AuthScreenState extends State<AuthScreen> {
       _cpvalid = true;
 
   bool validateEmail(String value) {
+    if (value == null) return false;
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = new RegExp(pattern);
@@ -41,10 +41,152 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   bool validatePassword(String value) {
+    if (value == null) return false;
     String pattern =
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
+  }
+
+  void submit() async {
+    print('Submitted email: $_email  password: $_password');
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => WillPopScope(
+        onWillPop: () => Future.delayed(Duration(), () => false),
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    );
+    Provider.of<AppUser>(context, listen: false).fromForm(
+      email: _email,
+      password: _password,
+    ); //SET AppUSER in Provider
+    bool success;
+    if (_page) {
+      //LOGIN
+      print("From Login NOT IMPLEMENTED YET");
+      // try {
+      //   success = await Provider.of<ServerRequests>(context, listen: false)
+      //       .login(Provider.of<AppUser>(context, listen: false));
+      // } on PlatformException catch (exp) {
+      //   Navigator.pop(context);
+      //   //SHOW ERROR
+      //   await errorBox(context, exp);
+      //   success = false;
+      // }
+      // if (success) {
+      //   String json;
+      //   try {
+      //     json =
+      //         await Provider.of<ServerRequests>(context, listen: false).getUser(
+      //       store.getString('token'),
+      //     );
+      //   } on PlatformException catch (e) {
+      //     print(e.code);
+      //     //TODO:SERVER DOWN CLOSE APP
+      //     await errorBox(context, e);
+      //   }
+      //   if (json != null) {
+      //     Provider.of<AppUser>(context, listen: false)
+      //         .fromServer(json); //SETTING THE AppUSER IN PROVIDER
+      //     //check profile complete or not
+      //     final jsonObj = jsonDecode(json);
+      //     if (jsonObj['data']['verified'] == false) {
+      //       //Email & Pass SignUp
+      //       //EMAIL LEFT ->Phone and hostel left
+      //       bool success1;
+      //       try {
+      //         success1 =
+      //             await Provider.of<ServerRequests>(context, listen: false)
+      //                 .regenerateOtp();
+      //       } on PlatformException catch (e) {
+      //         print(e.code);
+      //         //TODO ASK WHAT AGAIN SIGN OR what
+      //         //CRASH APP ERROR
+      //         await errorBox(context, e);
+      //         success1 = false;
+      //       }
+      //       if (success1) {
+      //         Navigator.pushReplacement(
+      //           context,
+      //           MaterialPageRoute(
+      //             builder: (BuildContext context) => OTP2(),
+      //           ),
+      //         );
+      //       }
+      //     } else if (jsonObj['data']['verified'] == true &&
+      //         jsonObj['data']['phone'] == null) {
+      //       //Email verified
+      //       //PHONE AND HOSTEL LEFT
+      //       Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (BuildContext context) => OTP1(),
+      //         ),
+      //       );
+      //     } else {
+      //       //FULL USER PROFILE COMPLETE
+      //       //SHOPKEEPER CHECK
+      //       List<dynamic> shopkeeperShops = jsonObj['data']['shops'];
+      //       if (store.getBool('userType') == false && shopkeeperShops.isEmpty) {
+      //         Navigator.pushReplacement(
+      //           context,
+      //           MaterialPageRoute(
+      //             builder: (BuildContext context) => ShopProfile(),
+      //           ),
+      //         );
+      //       } else {
+      //         //GET ALL SHOPS
+      //         // final List<dynamic> list =
+      //         //     await widget.serverRequests.getShops(store.getString('token'));
+      //         // list.forEach((element) {
+      //         //   Shop.fromjson(element);
+      //         //   shops.add(Shop.fromjson(element));
+      //         // });
+      //         Navigator.pushReplacement(
+      //           context,
+      //           MaterialPageRoute(
+      //             builder: (BuildContext context) => HomePage(),
+      //           ),
+      //         );
+      //       }
+      //     }
+      //   }
+      // }
+    } else {
+      //REGISTER
+      print("From Register NOT IMPLEMENTED YET");
+      // try {
+      //   success = await Provider.of<ServerRequests>(context, listen: false)
+      //       .registerForm(Provider.of<AppUser>(context,
+      //           listen: false)); //SEND EMAIL OTP FROM SERVER
+      // } on PlatformException catch (exp) {
+      //   Navigator.pop(context); //Remove Circular Indicator
+      //   //SHOW ERROR
+      //   await errorBox(context, exp);
+      //   success = false;
+      // }
+      // if (success) {
+      //   //FIREBASE REGISTER Call
+      //   await Provider.of<Auth>(context, listen: false).formAuth(
+      //       email: _email, password: _password); //This Will never throw error
+      //   Navigator.pushAndRemoveUntil(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => MainScreen(),
+      //     ),
+      //     (_) => false,
+      //   );
+      // }
+    }
+    Navigator.pop(context); //TODO: Remove after implementation
   }
 
   @override
@@ -194,11 +336,17 @@ class _AuthScreenState extends State<AuthScreen> {
                                     },
                                     onSubmitted: (email) {
                                       _email = email;
-                                      _evalid = validateEmail(_email);
-                                      if (_evalid)
-                                        FocusScope.of(context)
-                                            .requestFocus(_passFocus);
-                                      else
+                                      setState(() {
+                                        _evalid = validateEmail(_email);
+                                      });
+                                      if (_evalid) {
+                                        if (!_pvalid ||
+                                            _password == null ||
+                                            _password == '')
+                                          FocusScope.of(context)
+                                              .requestFocus(_passFocus);
+                                        else if (_page) submit();
+                                      } else
                                         FocusScope.of(context)
                                             .requestFocus(_emailFocus);
                                     },
@@ -256,24 +404,34 @@ class _AuthScreenState extends State<AuthScreen> {
                                       _password = password;
                                       setState(() {
                                         _pvalid = validatePassword(_password);
+                                        _cpvalid =
+                                            (_password == _confirmPassword);
                                       });
                                     },
                                     onSubmitted: (password) {
                                       _password = password;
                                       setState(() {
                                         _pvalid = validatePassword(_password);
+                                        _cpvalid =
+                                            (_password == _confirmPassword);
                                       });
-                                      if (_pvalid && !_page)
-                                        FocusScope.of(context)
-                                            .requestFocus(_cPasswordFocus);
-                                      else if (_pvalid) {
-                                        print(
-                                            "SUBMITTED\n email: $_email   password: $_password");
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => OTP(),
-                                          ),
-                                        );
+                                      if (_pvalid) {
+                                        if (!_page &&
+                                            (!_cpvalid ||
+                                                _confirmPassword == null ||
+                                                _confirmPassword == '')) {
+                                          FocusScope.of(context)
+                                              .requestFocus(_cPasswordFocus);
+                                        } else if (!_evalid ||
+                                            _email == null ||
+                                            _email == '') {
+                                          setState(() {
+                                            _evalid = validateEmail(_email);
+                                          });
+                                          FocusScope.of(context)
+                                              .requestFocus(_emailFocus);
+                                        } else
+                                          submit();
                                       } else
                                         FocusScope.of(context)
                                             .requestFocus(_passFocus);
@@ -349,73 +507,62 @@ class _AuthScreenState extends State<AuthScreen> {
                                           autocorrect: false,
                                           onChanged: (confirmpassword) {
                                             _confirmPassword = confirmpassword;
-                                            _cpvalid =
-                                                (_confirmPassword == _password);
+                                            setState(() {
+                                              _cpvalid = (_confirmPassword ==
+                                                      _password &&
+                                                  _password != '' &&
+                                                  _password != null);
+                                            });
                                           },
                                           onSubmitted: (confrimPassword) {
                                             _confirmPassword = confrimPassword;
-                                            _cpvalid =
-                                                (_confirmPassword == _password);
+                                            setState(() {
+                                              _cpvalid = (_confirmPassword ==
+                                                      _password &&
+                                                  _password != null &&
+                                                  _password != '');
+                                            });
                                             if (_cpvalid) {
-                                              print(
-                                                  "SUBMITTED\n email: $_email   password: $_password    cPassword: $_confirmPassword");
-                                              Navigator.of(context)
-                                                  .pushAndRemoveUntil(
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            OTP(),
-                                                      ),
-                                                      (route) => false);
-                                            }
+                                              if (!_evalid ||
+                                                  _email == null ||
+                                                  _email == '') {
+                                                setState(() {
+                                                  _evalid =
+                                                      validateEmail(_email);
+                                                });
+                                                FocusScope.of(context)
+                                                    .requestFocus(_emailFocus);
+                                              } else
+                                                submit();
+                                            } else
+                                              FocusScope.of(context)
+                                                  .requestFocus(
+                                                      _cPasswordFocus);
                                           },
                                         ),
                                       ),
                                 GestureDetector(
                                   onTap: () {
-                                    print('SUBMIT');
-                                    if (_password != null &&
-                                        _email !=
-                                            null) //CONDITION FOR CHECK FIELDS
-                                    {
-                                      if (_page) {
-                                        //TODO: ADD LOGIN Code
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Container(), //TODO: ADD HOME PAGE here
-                                            ),
-                                            (route) => false);
-                                      } else {
-                                        if (_confirmPassword != null) {
-                                          //TODO: ADD REGISTER CODE
-                                          Provider.of<AppUser>(context,
-                                                  listen: false)
-                                              .fromForm(
-                                                  email: _email,
-                                                  password: _password);
-                                          Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MainScreen(),
-                                              ),
-                                              (route) => false);
-                                        } else
-                                          setState(() {
-                                            _cpvalid =
-                                                (_confirmPassword == _password);
-                                          });
-                                      }
-                                    } else
-                                      setState(() {
-                                        _evalid = validateEmail(_email);
-                                        _pvalid = validatePassword(_password);
-                                        if (!_page) {
-                                          _cpvalid =
-                                              (_confirmPassword == _password);
-                                        }
-                                      });
+                                    setState(() {
+                                      _evalid = validateEmail(_email);
+                                      _pvalid = validatePassword(_password);
+                                      if (!_page)
+                                        _cpvalid =
+                                            (_confirmPassword == _password &&
+                                                _password != null &&
+                                                _password != '');
+                                    });
+                                    if (!_evalid)
+                                      FocusScope.of(context)
+                                          .requestFocus(_emailFocus);
+                                    else if (!_pvalid)
+                                      FocusScope.of(context)
+                                          .requestFocus(_passFocus);
+                                    else if (!_page && !_cpvalid)
+                                      FocusScope.of(context)
+                                          .requestFocus(_cPasswordFocus);
+                                    else
+                                      submit();
                                   },
                                   child: Container(
                                     alignment: Alignment.center,
@@ -496,11 +643,11 @@ class _AuthScreenState extends State<AuthScreen> {
                                       try {
                                         userCredentials = await Provider.of<
                                                 Auth>(context, listen: false)
-                                            .googleAuth(); //GOOGLE SIGN IN TO GET FirebaseUserCredentials
+                                            .googleAuth(); //GOOGLE SIGN IN/Register TO GET FirebaseUserCredentials
                                       } on PlatformException catch (pltfmError) {
                                         Navigator.pop(
                                             context); //Remove Circular Indicator
-                                        //SHOW ERROR Register
+                                        //SHOW ERROR
                                         await errorBox(context, pltfmError);
                                       }
                                       if (userCredentials != null) {
@@ -510,37 +657,47 @@ class _AuthScreenState extends State<AuthScreen> {
                                                 listen: false)
                                             .fromFirebase(
                                                 firebaseUser); //Setting profile for user
-                                        bool success =
-                                            true; //TODO CHANGE THIS and below code
-                                        // try {
-                                        //   success = await Provider.of<
-                                        //               ServerRequests>(context,
-                                        //           listen: false)
-                                        //       .registerGoogle(Provider.of<
-                                        //               AppUser>(context,
-                                        //           listen:
-                                        //               false)); //CHECKS FOR DUPLICATE USER
-                                        // } on PlatformException catch (exp) {
-                                        //   Navigator.pop(
-                                        //       context); //Remove Circular Indicator
-                                        //   //SHOW ERROR
-                                        //   await errorBox(context, exp);
-                                        //   success = false;
-                                        // }
-                                        if (success) {
-                                          print('Navigating');
-                                          Provider.of<AppUser>(context,
-                                                  listen: false)
-                                              .printUser();
-                                          Navigator.of(context)
-                                              .pushAndRemoveUntil(
-                                            MaterialPageRoute(
-                                              builder: (context) => MainScreen(
-                                                page: 2,
+                                        bool success = true;
+                                        if (_page) {
+                                          //LOGIN
+                                          print(
+                                              "Google Login NOT IMPLEMENTED YET But will create firbase user");
+                                          //Same above login code
+                                        } else {
+                                          //REGISTER
+                                          print(
+                                              "Google Register IMPLEMENTED But not at server side, will create firbase user and navigate");
+                                          // try {
+                                          //   success = await Provider.of<
+                                          //               ServerRequests>(context,
+                                          //           listen: false)
+                                          //       .registerGoogle(Provider.of<
+                                          //               AppUser>(context,
+                                          //           listen:
+                                          //               false)); //CHECKS FOR DUPLICATE USER
+                                          // } on PlatformException catch (exp) {
+                                          //   Navigator.pop(
+                                          //       context); //Remove Circular Indicator
+                                          //   //SHOW ERROR
+                                          //   await errorBox(context, exp);
+                                          //   success = false;
+                                          // }
+                                          if (success) {
+                                            //Registration Complete
+                                            Provider.of<AppUser>(context,
+                                                    listen: false)
+                                                .printUser();
+                                            Navigator.of(context)
+                                                .pushAndRemoveUntil(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MainScreen(
+                                                  page: 2,
+                                                ),
                                               ),
-                                            ),
-                                            (_) => false,
-                                          );
+                                              (_) => false,
+                                            );
+                                          }
                                         }
                                       }
                                     },

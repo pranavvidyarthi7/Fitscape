@@ -11,7 +11,6 @@ class PicScroller extends StatefulWidget {
 }
 
 class _PicScrollerState extends State<PicScroller> {
-  List<int> data = [];
   Widget _buildItemList(BuildContext context, int index) {
     return Container(
       alignment: Alignment.center,
@@ -37,19 +36,11 @@ class _PicScrollerState extends State<PicScroller> {
         border: Border.all(
             color: index == _focusedIndex ? Colors.white : Colors.black),
       ),
-      child: Text('${data[index]}'),
+      child: Text('${emoticons[index]}'),
     );
   }
 
   int _focusedIndex = 2;
-
-  @override
-  void initState() {
-    for (int i = 0; i <= 10; i++) {
-      data.add(i);
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +60,7 @@ class _PicScrollerState extends State<PicScroller> {
           },
           updateOnScroll: true,
           initialIndex: _focusedIndex.toDouble(),
-          itemCount: data.length,
+          itemCount: emoticons.length,
           dynamicSizeEquation: (dist) {
             return (dist.abs() < 36 / 3.6 * boxSizeH) ? 1 : 0.8;
           },

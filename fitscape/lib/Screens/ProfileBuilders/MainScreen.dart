@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitscape/Screens/Login_Register/AuthScreen.dart';
+import 'package:fitscape/Services/User.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:provider/provider.dart';
 
 import '../../UI Components/ErrorBox.dart';
 import '../../Variables.dart';
@@ -23,11 +26,24 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  String _otp = '';
-  bool validate = false;
-
+  String _otp = '',
+      _name = '',
+      _pic = '',
+      _gender = '',
+      _weight = '',
+      _height = '';
   PhoneNumber phone;
-  Future<void> phoneauthFirebase(String phone) async {
+  bool validate = false;
+  double _percent;
+  int _page;
+  // 1:otp
+  // 2:name and pic
+  // 3:male
+  // 4:phone
+  // 5:weight
+  // 6:height
+
+  Future<bool> phoneauthFirebase(String phone) async {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -44,6 +60,7 @@ class _MainScreenState extends State<MainScreen> {
     );
     FirebaseAuth _auth = FirebaseAuth.instance;
     print('phone  $phone');
+    bool success = false;
     await _auth.verifyPhoneNumber(
         timeout: Duration(seconds: 40),
         phoneNumber: phone,
@@ -51,18 +68,7 @@ class _MainScreenState extends State<MainScreen> {
             phoneAuthCredential) async {
           if (phoneAuthCredential.token != null) {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: Colors.green,
-                duration: Duration(seconds: 1),
-                content: Text(
-                  'SUCCESS',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-            // Provider.of<AppUser>(context, listen: false).setPhone(phone);
-            // bool success;
+            Provider.of<AppUser>(context, listen: false).setPhone(phone);
             // try {
             //   success = await Provider.of<ServerRequests>(context,
             //           listen: false)
@@ -71,14 +77,6 @@ class _MainScreenState extends State<MainScreen> {
             //   //SHOW ERROR ON UPDATE PROFILE
             //   await errorBox(context, e);
             //   success = false;
-            // }
-            // if (success) {
-            //   Navigator.of(context).pushAndRemoveUntil(
-            //     MaterialPageRoute(
-            //       builder: (context) => Intro1(),
-            //     ),
-            //     (_) => false,
-            //   );
             // }
           } else {
             Navigator.pop(context); //Remove Circular indicator
@@ -117,11 +115,12 @@ class _MainScreenState extends State<MainScreen> {
                 details: 'single'),
           );
         });
+    return success;
   }
 
-  Future<void> phoneVerify() async {
+  Future<bool> phoneVerify() async {
     if (phone != null && phone.parseNumber().length == 10) {
-      await phoneauthFirebase(phone.toString());
+      return await phoneauthFirebase(phone.toString());
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -132,19 +131,11 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       );
+      return false;
     }
   }
 
-  double _percent;
-  int _page;
-  // 1:otp
-  // 2:name and pic
-  // 3:male
-  // 4:phone
-  // 5:weight
-  // 6:height
-
-  bool checkOTP() {
+  Future<bool> checkOTP() async {
     if (validate) {
       showDialog(
         barrierDismissible: false,
@@ -164,13 +155,13 @@ class _MainScreenState extends State<MainScreen> {
       // try {
       //   success = await Provider.of<ServerRequests>(context,
       //           listen: false)
-      //       .changeOTP(_otp);
+      //       .checkOTP(_otp);
       // } on PlatformException catch (e) {
       //   //TODO Impliment RESEND OTP BTN
       //   print(e.code);
       //   await errorBox(context, e);
       //   success = false;
-      //   Navigator.pop(context);
+      Navigator.pop(context);
       // }
       return success;
     } else {
@@ -187,26 +178,155 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  bool checkName() {
-    return true;
+  Future<bool> updateNameandPic() async {
+    if (validate) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => WillPopScope(
+          onWillPop: () => Future.delayed(Duration(), () => false),
+          child: Dialog(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ),
+      );
+      bool success = false;
+      Provider.of<AppUser>(context, listen: false).setName(_name);
+      // try {
+      //   success = await Provider.of<ServerRequests>(context,
+      //           listen: false)
+      //       .updateProfile();
+      // } on PlatformException catch (e) {
+      //   //TODO Impliment RESEND OTP BTN
+      //   print(e.code);
+      //   await errorBox(context, e);
+      //   success = false;
+      Navigator.pop(context);
+      // }
+      return success;
+    }
+    return false;
+  }
+
+  Future<bool> updateGender() async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => WillPopScope(
+        onWillPop: () => Future.delayed(Duration(), () => false),
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    );
+    bool success = false;
+    Provider.of<AppUser>(context, listen: false).setGender(_gender);
+    // try {
+    //   success = await Provider.of<ServerRequests>(context,
+    //           listen: false)
+    //       .updateProfile();
+    // } on PlatformException catch (e) {
+    //   //TODO Impliment RESEND OTP BTN
+    //   print(e.code);
+    //   await errorBox(context, e);
+    //   success = false;
+    Navigator.pop(context);
+    // }
+    return success;
+  }
+
+  Future<bool> updateHeight() async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => WillPopScope(
+        onWillPop: () => Future.delayed(Duration(), () => false),
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    );
+    bool success = false;
+    Provider.of<AppUser>(context, listen: false).height = _height;
+    // try {
+    //   success = await Provider.of<ServerRequests>(context,
+    //           listen: false)
+    //       .updateProfile();
+    // } on PlatformException catch (e) {
+    //   //TODO Impliment RESEND OTP BTN
+    //   print(e.code);
+    //   await errorBox(context, e);
+    //   success = false;
+    Navigator.pop(context);
+    // }
+    return success;
+  }
+
+  Future<bool> updateWeight() async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => WillPopScope(
+        onWillPop: () => Future.delayed(Duration(), () => false),
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    );
+    bool success = false;
+    Provider.of<AppUser>(context, listen: false).weight = _weight;
+    // try {
+    //   success = await Provider.of<ServerRequests>(context,
+    //           listen: false)
+    //       .updateProfile();
+    // } on PlatformException catch (e) {
+    //   //TODO Impliment RESEND OTP BTN
+    //   print(e.code);
+    //   await errorBox(context, e);
+    //   success = false;
+    Navigator.pop(context);
+    // }
+    return success;
   }
 
   Future<bool> next() async {
     switch (_page) {
       case 1:
-        return checkOTP();
+        return await checkOTP();
       case 2:
-        return checkName();
+        return await updateNameandPic();
       case 3:
+        return await updateGender();
+      case 4:
+        return await phoneVerify();
+      case 5:
+        return await updateWeight();
+      case 6:
+        return await updateHeight();
       default:
+        return true;
     }
   }
 
   void _percentIncrement() {
     if (_page <= 6) {
-      setState(() {
-        _percent += 1 / 6;
-      });
+      _percent += 1 / 6;
     }
   }
 
@@ -225,7 +345,6 @@ class _MainScreenState extends State<MainScreen> {
     boxSizeV = SizeConfig.safeBlockVertical;
     return WillPopScope(
       //EXIT APP ERROR
-      // print('EXIT APP');
       onWillPop: () async {
         bool val = await errorBox(
           context,
@@ -236,12 +355,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
         );
         print(val);
-        if (val) {
-          // await Provider.of<Auth>(context, listen: false).logOut();
-          // store.clear();
-          // exit(0);
-          SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-        }
+        if (val) SystemChannels.platform.invokeMethod('SystemNavigator.pop');
         return false;
       },
       child: SafeArea(
@@ -266,7 +380,6 @@ class _MainScreenState extends State<MainScreen> {
                       children: [
                         GestureDetector(
                             onTap: () async {
-                              print("BACK");
                               //Ask for logout
                               bool val = await errorBox(
                                 context,
@@ -277,16 +390,14 @@ class _MainScreenState extends State<MainScreen> {
                                 ),
                               );
                               print(val);
-                              // if (val) {
-                              //   await Provider.of<Auth>(context, listen: false)
-                              //       .logOut();
-                              //   store.clear();
-                              //   Navigator.of(context).pushAndRemoveUntil(
-                              //       MaterialPageRoute(
-                              //         builder: (context) => LoginPage(),
-                              //       ),
-                              //       (route) => false);
-                              // }
+                              if (val) {
+                                store.clear();
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (context) => AuthScreen(),
+                                    ),
+                                    (route) => false);
+                              }
                             },
                             child: Icon(
                               Icons.arrow_back_ios,
@@ -357,24 +468,32 @@ class _MainScreenState extends State<MainScreen> {
                                 validate = false;
                             })
                           : _page == 2
-                              ? ProfilePicPage(
-                                  // child: Text("GENDER"),
-                                  ) //TODO GENDER Page here
+                              ? ProfilePicPage(change: (name, pic) {
+                                  _name = name;
+                                  _pic = pic;
+                                  if (_name == null || _name == '')
+                                    validate = false;
+                                  else
+                                    validate = true;
+                                })
                               : _page == 3
-                                  ? GenderPage()
+                                  ? GenderPage(change: (gender) {
+                                      _gender = gender ? 'Female' : 'Male';
+                                    })
                                   : _page == 4
                                       ? PhoneAuth(
                                           change: (v) {
                                             phone = v;
                                             print(phone);
                                           },
-                                          verify: () {
-                                            phoneVerify();
-                                          },
                                         )
                                       : _page == 5
-                                          ? WeightPage()
-                                          : HeightPage(),
+                                          ? WeightPage(change: (v) {
+                                              _weight = v;
+                                            })
+                                          : HeightPage(change: (v) {
+                                              _height = v;
+                                            }),
                       transitionBuilder: (child, animation) => FadeTransition(
                         opacity: animation,
                         child: child,
@@ -383,14 +502,15 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   GestureDetector(
                     onTap: () async {
+                      print("TAP");
                       bool condition = false;
                       condition = await next();
+                      Provider.of<AppUser>(context, listen: false).printUser();
                       if (condition) {
-                        _percentIncrement();
-                        if (_page <= 6)
-                          setState(() {
-                            _page++;
-                          });
+                        setState(() {
+                          _percentIncrement();
+                          if (_page <= 6) _page++;
+                        });
                       }
                     },
                     child: Container(

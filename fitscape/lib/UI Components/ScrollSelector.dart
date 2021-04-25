@@ -4,12 +4,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
 class ScrollSelector extends StatefulWidget {
+  final int index;
+  final Function(int) change;
+  final List<int> data;
+  final GlobalKey<ScrollSnapListState> gkey;
+
+  const ScrollSelector({this.index, this.change, this.data, this.gkey});
   @override
   _ScrollSelectorState createState() => _ScrollSelectorState();
 }
 
 class _ScrollSelectorState extends State<ScrollSelector> {
-  List<int> data = [];
   Widget _buildItemList(BuildContext context, int index) {
     return index == _focusedIndex
         ? Container(
@@ -74,18 +79,16 @@ class _ScrollSelectorState extends State<ScrollSelector> {
               );
   }
 
-  int _focusedIndex = 100;
-
+  int _focusedIndex;
   @override
   void initState() {
-    for (int i = 0; i <= 200; i++) {
-      data.add(i);
-    }
+    _focusedIndex = widget.index;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.gkey.currentState);
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -101,9 +104,11 @@ class _ScrollSelectorState extends State<ScrollSelector> {
           height: 80 / 6.4 * boxSizeV,
           // decoration: BoxDecoration(border: Border.all()),
           child: ScrollSnapList(
+            key: widget.gkey,
+            focusOnItemTap: true,
             onItemFocus: (index) {
               _focusedIndex = index;
-              print(_focusedIndex);
+              widget.change(widget.data[_focusedIndex]);
             },
             itemBuilder: _buildItemList,
             itemSize: 15 / 3.6 * boxSizeH,
@@ -113,7 +118,7 @@ class _ScrollSelectorState extends State<ScrollSelector> {
             },
             updateOnScroll: true,
             initialIndex: _focusedIndex.toDouble(),
-            itemCount: data.length,
+            itemCount: widget.data.length,
             dynamicSizeEquation: (dist) {
               return (dist.abs() < 7.5 / 3.6 * boxSizeH) ? 0.9 : 0.8;
             },
