@@ -36,6 +36,16 @@
 .packages
 .pub-cache/
 .pub/
+ 
+build/
+pubspec.lock
+
+# dependencies
+node_modules/
+
+#dot-env
+.env
+
 /build/
 
 # Web related
@@ -51,3 +61,4 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
