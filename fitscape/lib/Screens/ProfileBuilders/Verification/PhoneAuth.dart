@@ -7,8 +7,7 @@ import '../../../Variables.dart';
 
 class PhoneAuth extends StatefulWidget {
   final Function(PhoneNumber) change;
-  final Function verify;
-  PhoneAuth({this.change, this.verify});
+  PhoneAuth({this.change});
   @override
   _PhoneAuthState createState() => _PhoneAuthState();
 }
@@ -71,7 +70,8 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   border: UnderlineInputBorder(), hintText: 'Phone Number'),
               onInputChanged: widget.change,
               onFieldSubmitted: (n) {
-                widget.verify();
+                if (FocusScope.of(context).hasPrimaryFocus)
+                  FocusScope.of(context).unfocus();
               },
               countries: ['IN'],
             ),

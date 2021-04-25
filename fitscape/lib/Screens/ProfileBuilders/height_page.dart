@@ -1,16 +1,35 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:fitscape/UI%20Components/ScrollSelector.dart';
 import 'package:flutter/material.dart';
 import 'package:fitscape/Variables.dart';
+import 'package:scroll_snap_list/scroll_snap_list.dart';
+
 class HeightPage extends StatefulWidget {
+  final Function(String) change;
+  HeightPage({this.change});
   @override
   _HeightPageState createState() => _HeightPageState();
 }
 
 class _HeightPageState extends State<HeightPage> {
+  bool unit = true; //cm
+  List<int> data = [];
+  int h;
+  StreamController<int> _controller;
+  GlobalKey<ScrollSnapListState> key2;
+  @override
+  void initState() {
+    super.initState();
+    key2 = new GlobalKey();
+    h = 152;
+    _controller = StreamController.broadcast();
+    for (int i = 0; i <= 280; i++) {
+      data.add(i);
+    }
+  }
 
-  int cmBorderColor= 0xffFFFFFF;
-  int ftBorderColor=0xffC4C4C4;
-  int cmBoxColor=0xff8E85E3;
-  int ftBoxColor=0xffFFFFFF;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,68 +52,88 @@ class _HeightPageState extends State<HeightPage> {
                 GestureDetector(
                     child: Container(
                       alignment: Alignment.center,
-                      width: 70/3.6*boxSizeH,
-                      height: 40/6.4*boxSizeV,
+                      width: 70 / 3.6 * boxSizeH,
+                      height: 40 / 6.4 * boxSizeV,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: Color(cmBorderColor),
+                          color: Color(unit ? 0xffFFFFFF : 0xffC4C4C4),
                         ),
-                        color: Color(cmBoxColor),
+                        color: Color(unit ? 0xff8E85E3 : 0xffFFFFFF),
                         borderRadius: BorderRadius.circular(10),
-                        boxShadow:[BoxShadow(blurRadius: 15,color: Color(cmBoxColor),offset: Offset(1,3))],),
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 15,
+                              color: Color(unit ? 0xff8E85E3 : 0xffFFFFFF),
+                              offset: Offset(1, 3))
+                        ],
+                      ),
                       child: Text(
                         'cm',
-                        style: robotoB16.copyWith(color: cmBoxColor==0xff8E85E3?Color(0xffFFFFFF):Color(0xff000000)),
+                        style: robotoB16.copyWith(
+                            color: Color(unit ? 0xffFFFFFF : 0xff000000)),
                       ),
                     ),
-                    onTap: (){
+                    onTap: () {
                       setState(() {
-
-                        cmBorderColor=cmBorderColor==0xffFFFFFF?0xffC4C4C4:0xffFFFFFF;
-                        ftBorderColor=ftBorderColor==0xffFFFFFF?0xffC4C4C4:0xffFFFFFF;
-                        cmBoxColor=cmBoxColor==0xffFFFFFF?0xff8E85E3:0xffFFFFFF;
-                        ftBoxColor=ftBoxColor==0xffFFFFFF?0xff8E85E3:0xffFFFFFF;
-
+                        if (!unit)
+                          key2.currentState.focusToItem(max(0, h ~/ 2));
+                        unit = true;
                       });
-                    }
-                ),
+                    }),
                 SizedBox(
-                  width: 20/3.6*boxSizeH,
+                  width: 20 / 3.6 * boxSizeH,
                 ),
                 GestureDetector(
                     child: Container(
                       alignment: Alignment.center,
-                      width: 70/3.6*boxSizeH,
-                      height: 40/6.4*boxSizeV,
+                      width: 70 / 3.6 * boxSizeH,
+                      height: 40 / 6.4 * boxSizeV,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: Color(ftBorderColor),
+                          color: Color(unit ? 0xffC4C4C4 : 0xffFFFFFF),
                         ),
-                        color: Color(ftBoxColor),
+                        color: Color(unit ? 0xffFFFFFF : 0xff8E85E3),
                         borderRadius: BorderRadius.circular(10),
-                        boxShadow:[BoxShadow(blurRadius: 15,color: Color(ftBoxColor),offset: Offset(1,3))],),
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 15,
+                              color: Color(unit ? 0xffFFFFFF : 0xff8E85E3),
+                              offset: Offset(1, 3))
+                        ],
+                      ),
                       child: Text(
-                        'ft',
-                        style: robotoB16.copyWith(color: ftBoxColor==0xff8E85E3?Color(0xffFFFFFF):Color(0xff000000)),
+                        'in',
+                        style: robotoB16.copyWith(
+                          color: Color(unit ? 0xff000000 : 0xffFFFFFF),
+                        ),
                       ),
                     ),
-                    onTap: (){
+                    onTap: () {
                       setState(() {
-
-
-                        cmBorderColor=cmBorderColor==0xffFFFFFF?0xffC4C4C4:0xffFFFFFF;
-                        ftBorderColor=ftBorderColor==0xffFFFFFF?0xffC4C4C4:0xffFFFFFF;
-                        cmBoxColor=cmBoxColor==0xffFFFFFF?0xff8E85E3:0xffFFFFFF;
-                        ftBoxColor=ftBoxColor==0xffFFFFFF?0xff8E85E3:0xffFFFFFF;
-
-
+                        if (unit)
+                          key2.currentState.focusToItem(min(280, h * 2));
+                        unit = false;
                       });
-                    }
-                ),
+                    }),
               ],
             ),
           ),
-
+          StreamBuilder<int>(
+            stream: _controller.stream,
+            initialData: h,
+            builder: (context, snapshot) =>
+                Text('${snapshot.data} ${unit ? 'cm' : 'in'}'),
+          ),
+          ScrollSelector(
+              gkey: key2,
+              // key: ValueKey<int>(0),
+              index: h,
+              data: data,
+              change: (v) {
+                _controller.add(v);
+                h = v;
+                widget.change('$h ${unit ? 'cm' : 'ft'}');
+              })
         ],
       ),
     );
