@@ -53,73 +53,13 @@ class _OTPState extends State<OTP> {
               length: 6,
               textFieldAlignment: MainAxisAlignment.spaceAround,
               onChanged: widget.change,
-              onCompleted: widget.change,
+              onCompleted: (v) {
+                widget.change(v);
+                if (FocusScope.of(context).hasPrimaryFocus)
+                  FocusScope.of(context).unfocus();
+              },
             ),
           ),
-          // GestureDetector(
-          //   onTap: () async {
-          //     print(_otp);
-          //     if (validate) {
-          //       showDialog(
-          //         barrierDismissible: false,
-          //         context: context,
-          //         builder: (context) => WillPopScope(
-          //           onWillPop: () =>
-          //               Future.delayed(Duration(), () => false),
-          //           child: Dialog(
-          //             backgroundColor: Colors.transparent,
-          //             elevation: 0,
-          //             child: Center(
-          //               child: CircularProgressIndicator(),
-          //             ),
-          //           ),
-          //         ),
-          //       );
-          //       bool success;
-          //       // try {
-          //       //   success = await Provider.of<ServerRequests>(context,
-          //       //           listen: false)
-          //       //       .changeOTP(_otp);
-          //       // } on PlatformException catch (e) {
-          //       //   //TODO Impliment RESEND OTP BTN
-          //       //   print(e.code);
-          //       //   await errorBox(context, e);
-          //       //   success = false;
-          //       //   Navigator.pop(context);
-          //       // }
-          //       // if (success) {
-          //       //   Navigator.of(context).pushReplacement(
-          //       //     MaterialPageRoute(
-          //       //       builder: (context) => OTP1(),
-          //       //     ),
-          //       //   );
-          //       // }
-          //     } else {
-          //       ScaffoldMessenger.of(context).showSnackBar(
-          //         SnackBar(
-          //           duration: Duration(seconds: 1),
-          //           content: Text(
-          //             'Enter the complete OTP',
-          //             textAlign: TextAlign.center,
-          //           ),
-          //         ),
-          //       );
-          //     }
-          //   },
-          //   child: Container(
-          //     alignment: Alignment.center,
-          //     width: 291 * boxSizeH / 3.6,
-          //     height: 58 * boxSizeV / 6.4,
-          //     decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.all(Radius.circular(14)),
-          //       color: Colors.black,
-          //     ),
-          //     child: Text(
-          //       'Verify and Proceed',
-          //       // style: josefinSansR18.copyWith(color: Colors.white),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );

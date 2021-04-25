@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import './Variables.dart';
+import '../Variables.dart';
 
 Future<bool> errorBox(BuildContext context, PlatformException e) async {
   bool val = false;
