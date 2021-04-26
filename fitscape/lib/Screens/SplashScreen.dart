@@ -2,13 +2,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import '../Services/ServerRequests.dart';
+import '../Screens/Login_Register/AuthScreen.dart';
+import '../Services/User.dart';
 import '../Variables.dart';
 import '../WidgetResizing.dart';
-import '../template.dart';
 
 class SplashScreen extends StatefulWidget {
+  final AppUser appUser;
+  final ServerRequests serverRequests;
+  SplashScreen({this.appUser, this.serverRequests});
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -23,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
       context,
       MaterialPageRoute(
         builder: (BuildContext context) =>
-            Template(), //TODO: ADD NAVIGATION TO HOME PAGE HERE
+            AuthScreen(), //TODO: START screen left
       ),
     );
   }
@@ -67,14 +71,15 @@ class _SplashScreenState extends State<SplashScreen> {
               Container(
                 child: Text(
                   'FITSCAPE',
-                  style: GoogleFonts.bangers(
-                      fontSize: 65, color: Color(0xff2F2E41)),
+                  style: bangersSB62.copyWith(
+                    color: Color(0xff2F2E41),
+                  ),
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(
                   top: 180 / 6.4 * boxSizeV,
-                  bottom: 45 / 6.4 * boxSizeV,
+                  bottom: 25 / 6.4 * boxSizeV,
                 ),
                 child: Text('By Tecnotuners', style: josefinSansSB22),
               ),
