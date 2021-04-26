@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
             builder: (context, appUser, child) =>
                 // SplashScreen(appUser: appUser, serverRequests: serverRequests),
                 MainScreen(
-              page: 6,
+              page: 5,
             ),
           ),
         ),

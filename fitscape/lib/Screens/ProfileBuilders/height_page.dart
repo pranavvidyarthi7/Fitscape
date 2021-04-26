@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:fitscape/UI%20Components/ScrollSelector.dart';
 import 'package:flutter/material.dart';
 import 'package:fitscape/Variables.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
 class HeightPage extends StatefulWidget {
@@ -122,7 +123,25 @@ class _HeightPageState extends State<HeightPage> {
             stream: _controller.stream,
             initialData: h,
             builder: (context, snapshot) =>
-                Text('${snapshot.data} ${unit ? 'cm' : 'in'}'),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text('${snapshot.data} ',
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 40.0,
+                    ),),
+                    Text('${unit ? 'cm' : 'in'}',
+                   style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24.0,
+                ),
+                 ),
+                  ],
+                ),
           ),
           ScrollSelector(
               gkey: key2,
