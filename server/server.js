@@ -16,6 +16,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // *Routes
 const userroutes = require('./routes/userroutes.js');
 
+// access config var
+process.env.TOKEN_SECRET;
 
 const PORT = process.env.PORT || 3000;
 
@@ -23,7 +25,8 @@ const PORT = process.env.PORT || 3000;
 connectdb();
 
 
-
+//add middlewares
+app.use(express.json({ extended: false }));
 
 //initiaise passport
 app.use(passport.initialize());
