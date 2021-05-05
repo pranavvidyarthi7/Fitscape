@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:fitscape/UI%20Components/ScrollSelector.dart';
 import 'package:flutter/material.dart';
 import 'package:fitscape/Variables.dart';
@@ -122,7 +122,25 @@ class _WeightPageState extends State<WeightPage> {
             stream: _controller.stream,
             initialData: w,
             builder: (context, snapshot) =>
-                Text('${snapshot.data} ${unit ? 'lbs' : 'kg'}'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text('${snapshot.data} ',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 40.0,
+                      ),),
+                    Text('${unit ? 'lbs' : 'kg'}',
+                      style: GoogleFonts.roboto(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 24.0,
+                      ),
+                    ),
+                  ],
+                ),
+
           ),
           ScrollSelector(
               gkey: key,

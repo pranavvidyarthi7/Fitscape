@@ -1,4 +1,6 @@
+import 'package:fitscape/DashboardScreen.dart';
 import 'package:fitscape/Screens/ProfileBuilders/MainScreen.dart';
+import 'package:fitscape/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,6 +27,10 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
+    // return MaterialApp(
+    //   home: DashboardScreen(),
+    // );
     return MultiProvider(
       providers: [
         Provider<ServerRequests>(
@@ -37,18 +43,22 @@ class MyApp extends StatelessWidget {
           create: (context) => AppUser(),
         )
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Consumer<ServerRequests>(
-          builder: (context, serverRequests, child) => Consumer<AppUser>(
-            builder: (context, appUser, child) =>
-                // SplashScreen(appUser: appUser, serverRequests: serverRequests),
-                MainScreen(
-              page: 6,
-            ),
-          ),
-        ),
-      ),
+    child: MaterialApp(
+       home: DashboardScreen(),
+    ),
     );
+    //   child: MaterialApp(
+    //     debugShowCheckedModeBanner: false,
+    //     home: Consumer<ServerRequests>(
+    //       builder: (context, serverRequests, child) => Consumer<AppUser>(
+    //         builder: (context, appUser, child) =>
+    //             // SplashScreen(appUser: appUser, serverRequests: serverRequests),
+    //             MainScreen(
+    //           page: 5,
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 }
