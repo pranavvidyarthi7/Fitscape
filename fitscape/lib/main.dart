@@ -1,6 +1,6 @@
-import 'package:fitscape/DashboardScreen.dart';
+import 'package:fitscape/Screens/Dashboard/DashboardScreen.dart';
 import 'package:fitscape/Screens/ProfileBuilders/MainScreen.dart';
-import 'package:fitscape/dashboard_page.dart';
+import 'package:fitscape/Screens/Dashboard/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
