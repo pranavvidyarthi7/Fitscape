@@ -29,6 +29,7 @@ dependencies:
   flutter_svg: ^0.21.0
   google_fonts: ^2.0.0
   google_sign_in: ^4.0.7
+  html: ^0.15.0
   intl_phone_number_input: ^0.5.2+2
   otp_text_field: ^1.1.0
   percent_indicator: ^3.0.1

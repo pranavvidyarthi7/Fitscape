@@ -1,4 +1,5 @@
 import 'package:fitscape/Screens/ProfileBuilders/MainScreen.dart';
+import 'package:fitscape/testLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,9 +44,10 @@ class MyApp extends StatelessWidget {
           builder: (context, serverRequests, child) => Consumer<AppUser>(
             builder: (context, appUser, child) =>
                 // SplashScreen(appUser: appUser, serverRequests: serverRequests),
-                MainScreen(
-              page: 5,
-            ),
+                //     MainScreen(
+                //   page: 5,
+                // ),
+                Logic(),
           ),
         ),
       ),
