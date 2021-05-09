@@ -30,31 +30,41 @@ const UserSchema = new mongoose.Schema(
         },
         height:{
             
-            type:Number
+            type:String,
+            
+               
+        
+        },
+        hunit:{
+            type:String
         },
         weight:{
             
-            type:Number
+            type:String,
+            
+           
+        },
+        wunit:{
+            type:String,
         },
         bmi:{
            
             type:Number
         },
-        steps:{
-           
+        age:{
             type:Number
         },
-        calorieintake:{
-           
+        pregnant:{
+            type:String
+        },lifestyle:
+        {
             type:Number
         },
-        calorieburnt:{
+        role:{
+            type: String,
+            default: 'USER',
+            enum : ['ADMIN','USER']
            
-            type:Number
-        },
-        distancetravelled:{
-           
-            type:Number
         }
     });
     // Encrypt password using bcrypt

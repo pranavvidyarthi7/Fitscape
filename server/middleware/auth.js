@@ -47,3 +47,58 @@ exports.protectUser = async (req, res, next) => {
             return res.status(400).send({ error: "unauthorised access" })
         }
     };
+
+
+    // Protect routes for ADMIN
+exports.protectAdmin = async (req, res, next) => {
+    let token;
+    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer'))
+    {
+        token=req.headers.authorization.split(' ')[1];
+
+    }else if(req.user && req.user.role === 'ADMIN')
+    {
+       
+    }else if(req.session.token)
+    {
+         token = req.session.token;
+    }
+
+        //If the token does not exist
+        if(!token && req.user === null)
+        {
+            return res.status(401).json({
+                success: false,
+                message: 'Not authorized to access this route',
+        });
+
+        }
+
+        try{
+            if(req.user && req.user.role === 'ADMIN' ){
+                next();
+            }else{
+                //verify the token
+                const decoded=jwt.verify(token,process.env.TOKEN_SECRET);
+                console.log(decoded);
+                console.log("decoded id ")
+                console.log(decoded._id);
+                req.user = await User.findById(decoded._id);
+                const user =await User.findById(decoded._id);
+                console.log("user "+ user)
+                if( user.role === 'ADMIN')
+                {
+                    next();
+                }
+                else{
+                    console.log("You are an not admin")
+                    return res.status(400).send({ error: "unauthorised access" })
+                }
+              
+                
+            }
+        }catch(err){
+            console.log(err)
+            return res.status(400).send({ error: "unauthorised access" })
+        }
+    };
