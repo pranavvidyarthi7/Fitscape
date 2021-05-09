@@ -6,7 +6,7 @@
     "scripts": {
       "postinstall": "npm install --prefix server",
       "test": "echo \"Error: no test specified\" && exit 1",
-      "start": "node server.js --prefix server"
+      "start": "node /server/server.js "
     },
     "author": "",
     "license": "ISC",
