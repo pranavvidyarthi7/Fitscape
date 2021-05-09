@@ -1,5 +1,6 @@
 import 'package:fitscape/Screens/Dashboard/DashboardScreen.dart';
 import 'package:fitscape/Screens/ProfileBuilders/MainScreen.dart';
+import 'package:fitscape/testLogic.dart';
 import 'package:fitscape/Screens/Dashboard/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,9 +44,9 @@ class MyApp extends StatelessWidget {
           create: (context) => AppUser(),
         )
       ],
-    child: MaterialApp(
-       home: DashboardScreen(),
-    ),
+      child: MaterialApp(
+        home: DashboardScreen(),
+      ),
     );
     //   child: MaterialApp(
     //     debugShowCheckedModeBanner: false,
