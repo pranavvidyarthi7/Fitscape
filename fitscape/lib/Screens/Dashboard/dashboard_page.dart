@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'Variables.dart';
+import '../../Variables.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fitscape/Services/User.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
-
 
 class DashBoard extends StatefulWidget {
 
