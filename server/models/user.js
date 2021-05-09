@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const UserSchema = new mongoose.Schema(
     { 
         name:{
-            required:true,
+            
             type:String
         },
         email:{
@@ -19,42 +19,52 @@ const UserSchema = new mongoose.Schema(
             trim: true,
         },
         gender:{
-            required:true,
+           
             type:String
         },
        phone:{
-            required:true,
+           
             type:Number,
             minlength: 10,
             maxlength: 10,
         },
         height:{
-            required:true,
-            type:Number
+            
+            type:String,
+            
+               
+        
+        },
+        hunit:{
+            type:String
         },
         weight:{
-            required:true,
-            type:Number
+            
+            type:String,
+            
+           
+        },
+        wunit:{
+            type:String,
         },
         bmi:{
            
             type:Number
         },
-        steps:{
-           
+        age:{
             type:Number
         },
-        calorieintake:{
-           
+        pregnant:{
+            type:String
+        },lifestyle:
+        {
             type:Number
         },
-        calorieburnt:{
+        role:{
+            type: String,
+            default: 'USER',
+            enum : ['ADMIN','USER']
            
-            type:Number
-        },
-        distancetravelled:{
-           
-            type:Number
         }
     });
     // Encrypt password using bcrypt
