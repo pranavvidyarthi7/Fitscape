@@ -2,14 +2,17 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AppUser {
-  String _name;
   String _email;
   String _password;
-  String _phone;
+  String _username;
+  String photoURL;
   String _gender;
+  String _phone;
   String weight;
   String height;
-  String photoURL;
+  int age;
+  int lifestyle;
+  String femaleStatus; //pregnant
 
   void _setProfile({
     String name,
@@ -17,13 +20,13 @@ class AppUser {
     String password,
     String phone,
   }) {
-    this._name = name ?? this._name;
+    this._username = name ?? this._username;
     this._email = email ?? this._email;
     this._password = password ?? this._password;
     this._phone = phone ?? this._phone;
   }
 
-  String get name => this._name;
+  String get name => this._username;
   String get email => this._email;
   String get password => this._password;
   String get phone => this._phone;
@@ -33,7 +36,7 @@ class AppUser {
   }
 
   void setName(String name) {
-    this._name = name;
+    this._username = name;
   }
 
   void setGender(String gender) {
@@ -77,7 +80,7 @@ class AppUser {
 
   void printUser() {
     print('USER DETAILS');
-    print(this._name);
+    print(this._username);
     print(this._email);
     print(this._password);
     print('phone ${this._phone}');

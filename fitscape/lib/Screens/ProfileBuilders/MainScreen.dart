@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitscape/Screens/Login_Register/AuthScreen.dart';
 import 'package:fitscape/Services/User.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +7,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
+import '../AuthScreen.dart';
 import '../../UI Components/ErrorBox.dart';
 import '../../Variables.dart';
 import '../../WidgetResizing.dart';
@@ -42,6 +42,7 @@ class _MainScreenState extends State<MainScreen> {
   // 4:phone
   // 5:weight
   // 6:height
+  // 7:age,lifestyle
 
   Future<bool> phoneauthFirebase(String phone) async {
     showDialog(
@@ -319,14 +320,15 @@ class _MainScreenState extends State<MainScreen> {
         return await updateWeight();
       case 6:
         return await updateHeight();
+      //TODO: Implement for page 7
       default:
         return true;
     }
   }
 
   void _percentIncrement() {
-    if (_page <= 6) {
-      _percent += 1 / 6;
+    if (_page <= 7) {
+      _percent += 1 / 7;
     }
   }
 
@@ -334,7 +336,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     _page = widget.page ?? 1;
-    _percent = (_page - 1) / 6;
+    _percent = (_page - 1) / 7;
     super.initState();
   }
 
@@ -491,9 +493,11 @@ class _MainScreenState extends State<MainScreen> {
                                           ? WeightPage(change: (v) {
                                               _weight = v;
                                             })
-                                          : HeightPage(change: (v) {
-                                              _height = v;
-                                            }),
+                                          : _page == 6
+                                              ? HeightPage(change: (v) {
+                                                  _height = v;
+                                                })
+                                              : Container(), //Age,Lifestyle Page
                       transitionBuilder: (child, animation) => FadeTransition(
                         opacity: animation,
                         child: child,
@@ -509,7 +513,7 @@ class _MainScreenState extends State<MainScreen> {
                       if (condition) {
                         setState(() {
                           _percentIncrement();
-                          if (_page <= 6) _page++;
+                          if (_page <= 7) _page++;
                         });
                       }
                     },

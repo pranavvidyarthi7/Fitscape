@@ -7,12 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../Services/User.dart';
-import '../../Services/auth.dart';
-import '../../UI%20Components/ErrorBox.dart';
-import '../../Screens/ProfileBuilders/MainScreen.dart';
-import '../../Variables.dart';
-import '../../WidgetResizing.dart';
+import '../Services/User.dart';
+import '../Services/auth.dart';
+import '../UI%20Components/ErrorBox.dart';
+import '../Screens/ProfileBuilders/MainScreen.dart';
+import '../Variables.dart';
+import '../WidgetResizing.dart';
 
 class AuthScreen extends StatefulWidget {
   @override
