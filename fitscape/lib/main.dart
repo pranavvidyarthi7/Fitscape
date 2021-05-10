@@ -1,15 +1,11 @@
-import 'package:fitscape/Screens/Dashboard/DashboardScreen.dart';
-import 'package:fitscape/Screens/ProfileBuilders/MainScreen.dart';
-import 'package:fitscape/testLogic.dart';
-import 'package:fitscape/Screens/Dashboard/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import './Variables.dart';
 import './Screens/SplashScreen.dart';
+import './Variables.dart';
 import 'Services/ServerRequests.dart';
 import 'Services/User.dart';
 import 'Services/auth.dart';
@@ -45,21 +41,8 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
-        home: DashboardScreen(),
+        home: SplashScreen(),
       ),
     );
-    //   child: MaterialApp(
-    //     debugShowCheckedModeBanner: false,
-    //     home: Consumer<ServerRequests>(
-    //       builder: (context, serverRequests, child) => Consumer<AppUser>(
-    //         builder: (context, appUser, child) =>
-    //             // SplashScreen(appUser: appUser, serverRequests: serverRequests),
-    //             MainScreen(
-    //           page: 5,
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }
