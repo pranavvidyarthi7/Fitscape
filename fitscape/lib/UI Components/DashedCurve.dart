@@ -3,9 +3,7 @@ import 'package:path_drawing/path_drawing.dart';
 class DashedCurve extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-
   }
-
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return false;

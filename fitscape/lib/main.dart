@@ -1,3 +1,6 @@
+import 'package:fitscape/Screens/HomeScreen.dart';
+import 'package:fitscape/Screens/Main%20App%20Screens/MainAppScreen.dart';
+import 'package:fitscape/Screens/ProfileBuilders/MainScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -41,7 +44,8 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
-        home: SplashScreen(),
+        // home: SplashScreen(),
+        home: MainAppScreen(),
       ),
     );
   }

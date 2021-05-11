@@ -9,7 +9,8 @@ import 'package:fitscape/Services/User.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 class DashBoard extends StatefulWidget {
-
+  final Function(int) change;
+  DashBoard({this.change});
   @override
   _DashBoardState createState() => _DashBoardState();
 }
@@ -30,7 +31,7 @@ class _DashBoardState extends State<DashBoard> {
           width: 320/3.6 *boxSizeH,
           height: 86/6.4*boxSizeV,
           margin: EdgeInsets.only(
-            top: 30.0/6.4*boxSizeV,
+            top: 25.0/6.4*boxSizeV,
             bottom: 30.0/6.4*boxSizeV,
           ),
 
@@ -52,7 +53,6 @@ class _DashBoardState extends State<DashBoard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
-
                 children: [
                   Row(
                     children: [
@@ -290,170 +290,179 @@ class _DashBoardState extends State<DashBoard> {
 
               ),
               Row(
-
                 children: [
-                  Container(
-                    width: 150/3.6 *boxSizeH,
-                    height: 184/6.4*boxSizeV,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Color(0xff1E87FD),
-                        ),
-                        borderRadius:
-                        BorderRadius.all(Radius.circular(25.0) //
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 10,
-                              color:Color(0xff41E87FD),
+                  GestureDetector(
+                    onTap: (){
+                      widget.change(4);
+                    },
+                    child: Container(
+                      width: 150/3.6 *boxSizeH,
+                      height: 184/6.4*boxSizeV,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Color(0xff1E87FD),
+                          ),
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(25.0) //
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                color:Color(0xff41E87FD),
 
-                          )
-                        ],
-                      color: Color(0xff1E87FD),),
-                      child: Padding(
-                        padding:  EdgeInsets.only(
-                          left: 12/3.6*boxSizeH,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height:12/6.4*boxSizeV ,
-                            ),
-
-                            Text('WATER',
-                              style: robotoR10.copyWith(
-                                color: Colors.white,
-                                fontSize: 16.0
-                              ),
-                            ),
-                            Container(
-                              width: 77/3.6*boxSizeH,
-                              height: 77/6.4*boxSizeV,
-                              margin: EdgeInsets.only(
-                                top: 10/6.4*boxSizeV,
-                                bottom: 10/6.4*boxSizeV,
-                                left: 38/3.6*boxSizeH,
-                              ),
-                              child: LiquidCustomProgressIndicator(
-                                value: water_percent,
-                                direction: Axis.vertical,
-                                valueColor:AlwaysStoppedAnimation (Color(0xff42C9FF)),
-                                shapePath: _buildPath(dropsize),
-                                backgroundColor: Color(0xffD9E6FD),
-                              ),
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                  text: '9,890',
-                                  style: robotoB16.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 23.0),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: ' / 20,000 ml',
-                                      style: robotoB16.copyWith(
-                                          color: Colors.white,
-                                          fontSize: 13.0),
-                                    ),
-                                  ]
-                              ),
-                            ),
-                            SizedBox(
-                              height: 3/6.4*boxSizeV,
-                            ),
-                            Text(
-                              'last update 3m',
-                              style: robotoB16.copyWith(
-                                  color: Color(0xffEAEAEA),
-                                  fontSize: 12.0),
-                            ),
+                            )
                           ],
-                        ),
-                      )
+                        color: Color(0xff1E87FD),),
+                        child: Padding(
+                          padding:  EdgeInsets.only(
+                            left: 12/3.6*boxSizeH,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height:12/6.4*boxSizeV ,
+                              ),
+
+                              Text('WATER',
+                                style: robotoR10.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 16.0
+                                ),
+                              ),
+                              Container(
+                                width: 77/3.6*boxSizeH,
+                                height: 77/6.4*boxSizeV,
+                                margin: EdgeInsets.only(
+                                  top: 10/6.4*boxSizeV,
+                                  bottom: 10/6.4*boxSizeV,
+                                  left: 38/3.6*boxSizeH,
+                                ),
+                                child: LiquidCustomProgressIndicator(
+                                  value: water_percent,
+                                  direction: Axis.vertical,
+                                  valueColor:AlwaysStoppedAnimation (Color(0xff42C9FF)),
+                                  shapePath: _buildPath(dropsize),
+                                  backgroundColor: Color(0xffD9E6FD),
+                                ),
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                    text: '9,890',
+                                    style: robotoB16.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 23.0),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: ' / 20,000 ml',
+                                        style: robotoB16.copyWith(
+                                            color: Colors.white,
+                                            fontSize: 13.0),
+                                      ),
+                                    ]
+                                ),
+                              ),
+                              SizedBox(
+                                height: 3/6.4*boxSizeV,
+                              ),
+                              Text(
+                                'last update 3m',
+                                style: robotoB16.copyWith(
+                                    color: Color(0xffEAEAEA),
+                                    fontSize: 12.0),
+                              ),
+                            ],
+                          ),
+                        )
+                    ),
                   ),
                   SizedBox(
                     width: 20.0/3.6*boxSizeH,
                   ),
-                  Container(
-                    width: 150/3.6 *boxSizeH,
-                    height: 184/6.4*boxSizeV,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Color(0xff4C5A81),
-                        ),
-                        borderRadius:
-                        BorderRadius.all(Radius.circular(25.0) //
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 10,
-                              color:Color(0xff4C5A81),
-                              )
-                        ],
-                      color: Color(0xff4C5A81),),
-                      child: Padding(
-                        padding:  EdgeInsets.only(
-                          left: 12/3.6*boxSizeH,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 12/6.4*boxSizeV,
-                            ),
-                            Text('STEPS',
-                              style: robotoR10.copyWith(
-                                  color: Colors.white,
-                                  fontSize: 16.0,
-                              ),
-                            ),
-                            Container(
-                              width: 80/3.6*boxSizeH,
-                              height: 80/6.4*boxSizeV,
-                              margin: EdgeInsets.only(
-                                top: 10/6.4*boxSizeV,
-                                bottom: 10/6.4*boxSizeV,
-                                left: 20/3.6*boxSizeH,
-                              ),
-                              child: CircularPercentIndicator(
-                                radius: 80.0,
-                                lineWidth: 10.0,
-                                percent: step_percent,
-                                progressColor: Color(0xff8980F6),
-                                backgroundColor: Color(0xff445174),
-                                circularStrokeCap: CircularStrokeCap.round,
-                                center: SvgPicture.asset('assets/svg/dashboardstep.svg'),
-                              ),
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                  text: '9,890',
-                                  style: robotoB16.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 23.0),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: ' / 20,000',
-                                      style: robotoB16.copyWith(
-                                          color: Colors.white,
-                                          fontSize: 13.0),
-                                    ),
-                                  ]
-                              ),
-                            ),
-                            SizedBox(
-                              height: 3/6.4*boxSizeV,
-                            ),
-                            Text(
-                              'last update 3m',
-                              style: robotoB16.copyWith(
-                                  color: Color(0xffA2A8BF),
-                                  fontSize: 12.0),
-                            ),
+                  GestureDetector(
+                    onTap: (){
+                      widget.change(5);
+                    },
+                    child: Container(
+                      width: 150/3.6 *boxSizeH,
+                      height: 184/6.4*boxSizeV,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Color(0xff4C5A81),
+                          ),
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(25.0) //
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                                blurRadius: 10,
+                                color:Color(0xff4C5A81),
+                                )
                           ],
-                        ),
-                      )
+                        color: Color(0xff4C5A81),),
+                        child: Padding(
+                          padding:  EdgeInsets.only(
+                            left: 12/3.6*boxSizeH,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 12/6.4*boxSizeV,
+                              ),
+                              Text('STEPS',
+                                style: robotoR10.copyWith(
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                ),
+                              ),
+                              Container(
+                                width: 80/3.6*boxSizeH,
+                                height: 80/6.4*boxSizeV,
+                                margin: EdgeInsets.only(
+                                  top: 10/6.4*boxSizeV,
+                                  bottom: 10/6.4*boxSizeV,
+                                  left: 20/3.6*boxSizeH,
+                                ),
+                                child: CircularPercentIndicator(
+                                  radius: 80.0,
+                                  lineWidth: 10.0,
+                                  percent: step_percent,
+                                  progressColor: Color(0xff8980F6),
+                                  backgroundColor: Color(0xff445174),
+                                  circularStrokeCap: CircularStrokeCap.round,
+                                  center: SvgPicture.asset('assets/svg/dashboardstep.svg'),
+                                ),
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                    text: '9,890',
+                                    style: robotoB16.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 23.0),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text: ' / 20,000',
+                                        style: robotoB16.copyWith(
+                                            color: Colors.white,
+                                            fontSize: 13.0),
+                                      ),
+                                    ]
+                                ),
+                              ),
+                              SizedBox(
+                                height: 3/6.4*boxSizeV,
+                              ),
+                              Text(
+                                'last update 3m',
+                                style: robotoB16.copyWith(
+                                    color: Color(0xffA2A8BF),
+                                    fontSize: 12.0),
+                              ),
+                            ],
+                          ),
+                        )
+                    ),
                   ),
                 ],
               ),
