@@ -92,15 +92,7 @@ class _CalorieBurntPageState extends State<CalorieBurntPage> {
      //       progressColor: Color(0xff66DEEE),
      //       circularStrokeCap: CircularStrokeCap.butt,
      //     ),
-     //     CircularPercentIndicator(
-     //       radius: 100.0,
-     //       lineWidth: 15.0,
-     //       percent:0.5,
-     //       startAngle: 280,
-     //       backgroundColor: Color(0xff1D8DFD),
-     //       progressColor: Color(0xff8980F6),
-     //       circularStrokeCap: CircularStrokeCap.butt,
-     //     ),
+     //
      //   ],
      // ),
         SizedBox(
