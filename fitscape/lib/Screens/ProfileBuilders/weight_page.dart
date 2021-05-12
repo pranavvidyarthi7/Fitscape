@@ -14,8 +14,9 @@ class WeightPage extends StatefulWidget {
 }
 
 class _WeightPageState extends State<WeightPage> {
-  bool unit = true; //lbs
-  List<int> data = [];
+  bool unit = true; //lbs:900,
+  //kg:450
+  List<int> data = [], lbs = [];
   int w;
   StreamController<int> _controller;
   GlobalKey<ScrollSnapListState> key;
@@ -25,7 +26,11 @@ class _WeightPageState extends State<WeightPage> {
     key = GlobalKey();
     w = 180;
     _controller = StreamController.broadcast();
-    for (int i = 0; i <= 900; i++) {
+    for (int i = 1; i <= 450; i++) {
+      data.add(i);
+    }
+    for (int i = 451; i <= 900; i++) {
+      lbs.add(i);
       data.add(i);
     }
   }
@@ -76,8 +81,10 @@ class _WeightPageState extends State<WeightPage> {
                     ),
                     onTap: () {
                       setState(() {
-                        if (!unit)
-                          key.currentState.focusToItem(min(900, w * 2));
+                        if (!unit) {
+                          data.addAll(lbs);
+                          key.currentState.focusToItem(min(901, w * 2) - 1);
+                        }
                         unit = true;
                       });
                     }),
@@ -111,7 +118,17 @@ class _WeightPageState extends State<WeightPage> {
                     ),
                     onTap: () {
                       setState(() {
-                        if (unit) key.currentState.focusToItem(max(0, w ~/ 2));
+                        if (unit) {
+                          key.currentState.focusToItem(max(1, w ~/ 2) - 1);
+                          Future.delayed(
+                              Duration(
+                                milliseconds: 500,
+                              ), () {
+                            setState(() {
+                              data.removeRange(450, 900);
+                            });
+                          });
+                        }
                         unit = false;
                       });
                     }),
@@ -121,30 +138,31 @@ class _WeightPageState extends State<WeightPage> {
           StreamBuilder<int>(
             stream: _controller.stream,
             initialData: w,
-            builder: (context, snapshot) =>
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text('${snapshot.data} ',
-                      style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 40.0,
-                      ),),
-                    Text('${unit ? 'lbs' : 'kg'}',
-                      style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 24.0,
-                      ),
-                    ),
-                  ],
+            builder: (context, snapshot) => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  '${snapshot.data} ',
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 40.0,
+                  ),
                 ),
-
+                Text(
+                  '${unit ? 'lbs' : 'kg'}',
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 24.0,
+                  ),
+                ),
+              ],
+            ),
           ),
           ScrollSelector(
               gkey: key,
-              index: w,
+              index: w - 1,
               data: data,
               change: (v) {
                 _controller.add(v);

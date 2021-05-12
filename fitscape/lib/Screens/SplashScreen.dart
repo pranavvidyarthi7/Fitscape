@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
         json = await widget.serverRequests.getUser(token);
       } on PlatformException catch (e) {
         print(e.code);
-        //TODO:SERVER DOWN CLOSE APP
+        //SERVER DOWN CLOSE APP
         await errorBox(context, e);
       }
       if (json != null) {
@@ -157,6 +157,7 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             children: [
               Container(
+                // decoration: BoxDecoration(border: Border.all()),
                 margin: EdgeInsets.only(
                   top: 120 / 6.4 * boxSizeV,
                   bottom: 22 / 6.4 * boxSizeV,
@@ -167,6 +168,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
               ),
               Container(
+                // decoration: BoxDecoration(border: Border.all()),
                 child: Text(
                   'FITSCAPE',
                   style: bangersSB62.copyWith(
@@ -175,9 +177,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
               ),
               Container(
+                // decoration: BoxDecoration(border: Border.all()),
                 margin: EdgeInsets.only(
                   top: 180 / 6.4 * boxSizeV,
-                  bottom: 25 / 6.4 * boxSizeV,
                 ),
                 child: Text('By Tecnotuners', style: josefinSansSB22),
               ),

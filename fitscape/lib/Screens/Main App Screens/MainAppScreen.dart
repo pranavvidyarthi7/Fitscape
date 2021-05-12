@@ -10,10 +10,12 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../UI Components/BNB.dart';
 import '../../Variables.dart';
 import '../../WidgetResizing.dart';
+
 class MainAppScreen extends StatefulWidget {
   @override
   _MainAppScreenState createState() => _MainAppScreenState();
 }
+
 class _MainAppScreenState extends State<MainAppScreen> {
 //Page
 // 1:Dashboard Cards
@@ -30,44 +32,49 @@ class _MainAppScreenState extends State<MainAppScreen> {
 //Navigating Screens maybe
 // Profile
 // Chat
-  int _page=3;
+  int _page = 3;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     boxSizeH = SizeConfig.safeBlockHorizontal;
     boxSizeV = SizeConfig.safeBlockVertical;
-    return SafeArea(child: Scaffold(
-      body: Container(
-        margin: EdgeInsets.only(
-          top: 13/6.4*boxSizeV,
-          left: 20/3.6 *boxSizeH,
-          right: 20/3.6 *boxSizeH,
-        ),
-        child: AnimatedSwitcher(
-          duration: Duration(seconds: 1),
-          child:_page==1?DashBoard(
-            change: (v){
-              setState(() {
-                _page=v;
-              });
-            },
-          ):
-         _page==2?Container():
-          _page==3?CalorieBurntPage():
-          _page==4?WaterIntakePage():
-         _page==5?MainSteps():
-          _page==6?Container():
-              Container(),
-          transitionBuilder: (child, animation) => FadeTransition(
-            opacity: animation,
-            child: child,
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          margin: EdgeInsets.only(
+            top: 13 / 6.4 * boxSizeV,
+            left: 20 / 3.6 * boxSizeH,
+            right: 20 / 3.6 * boxSizeH,
+          ),
+          child: AnimatedSwitcher(
+            duration: Duration(seconds: 1),
+            child: _page == 1
+                ? DashBoard(
+                    change: (v) {
+                      setState(() {
+                        _page = v;
+                      });
+                    },
+                  )
+                : _page == 2
+                    ? Container()
+                    : _page == 3
+                        ? CalorieBurntPage()
+                        : _page == 4
+                            ? WaterIntakePage()
+                            : _page == 5
+                                ? MainSteps()
+                                : _page == 6
+                                    ? Container()
+                                    : Container(),
+            transitionBuilder: (child, animation) => FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
           ),
         ),
+        bottomNavigationBar: BNB(),
       ),
-      bottomNavigationBar: BNB(),
-    ),
     );
   }
 }
-
-

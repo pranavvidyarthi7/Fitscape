@@ -21,19 +21,19 @@ class _ScrollSelectorState extends State<ScrollSelector> {
             margin: EdgeInsets.only(
                 left: 6 / 3.6 * boxSizeH,
                 right: 6 / 3.6 * boxSizeH,
-                top: index % 10 == 0
+                top: index + 1 % 10 == 0
                     ? 2 / 6.4 * boxSizeV
-                    : index % 5 == 0
+                    : (index + 1) % 5 == 0
                         ? 4 / 6.4 * boxSizeV
                         : 12 / 6.4 * boxSizeV,
-                bottom: index % 10 == 0
+                bottom: (index + 1) % 10 == 0
                     ? (16 + 2) / 6.4 * boxSizeV
-                    : index % 5 == 0
+                    : (index + 1) % 5 == 0
                         ? (16 + 4) / 6.4 * boxSizeV
                         : (16 + 12) / 6.4 * boxSizeV),
             width: 3 / 3.6 * boxSizeH,
             color: Colors.red)
-        : index % 10 == 0
+        : (index + 1) % 10 == 0
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -57,7 +57,7 @@ class _ScrollSelectorState extends State<ScrollSelector> {
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       child: Text(
-                        index.toString(),
+                        widget.data[index].toString(),
                         style: robotoR10.copyWith(color: Color(0xff8E85E3)),
                       ),
                     ),
@@ -68,14 +68,16 @@ class _ScrollSelectorState extends State<ScrollSelector> {
                 margin: EdgeInsets.only(
                     left: 6 / 3.6 * boxSizeH,
                     right: 6 / 3.6 * boxSizeH,
-                    top: index % 5 == 0
+                    top: (index + 1) % 5 == 0
                         ? 4 / 6.4 * boxSizeV
                         : 12 / 6.4 * boxSizeV,
-                    bottom: index % 5 == 0
+                    bottom: (index + 1) % 5 == 0
                         ? (16 + 4) / 6.4 * boxSizeV
                         : (16 + 12) / 6.4 * boxSizeV),
                 width: 3 / 3.6 * boxSizeH,
-                color: index % 5 == 0 ? Color(0xff8E85E3) : Color(0xff6C63FF),
+                color: (index + 1) % 5 == 0
+                    ? Color(0xff8E85E3)
+                    : Color(0xff6C63FF),
               );
   }
 
@@ -88,7 +90,6 @@ class _ScrollSelectorState extends State<ScrollSelector> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.gkey.currentState);
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [

@@ -84,8 +84,9 @@ class AppUser {
     print(this._email);
     print(this._password);
     print('phone ${this._phone}');
-    print(this.photoURL);
-    print(this.weight);
+    print("pic: ${this.photoURL}");
+    print("weight: ${this.weight}");
+    print("height: ${this.height}");
     print('DETAILS END');
   }
 }

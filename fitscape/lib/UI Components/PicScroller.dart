@@ -6,11 +6,24 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
 class PicScroller extends StatefulWidget {
+  final Function(String) change;
+  final String pic;
+  PicScroller({this.change, this.pic});
   @override
   _PicScrollerState createState() => _PicScrollerState();
 }
 
 class _PicScrollerState extends State<PicScroller> {
+  int _focusedIndex = 2;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.pic != null) {
+      emoticons.insert(0, widget.pic);
+      _focusedIndex = 0;
+    }
+  }
+
   Widget _buildItemList(BuildContext context, int index) {
     return Container(
       alignment: Alignment.center,
@@ -40,8 +53,6 @@ class _PicScrollerState extends State<PicScroller> {
     );
   }
 
-  int _focusedIndex = 2;
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -51,6 +62,7 @@ class _PicScrollerState extends State<PicScroller> {
           onItemFocus: (index) {
             _focusedIndex = index;
             print(_focusedIndex);
+            widget.change(_focusedIndex.toString());
           },
           itemBuilder: _buildItemList,
           itemSize: 72 / 3.6 * boxSizeH,

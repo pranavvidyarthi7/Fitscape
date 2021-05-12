@@ -21,6 +21,12 @@ class _PhoneAuthState extends State<PhoneAuth> {
   }
 
   @override
+  void dispose() {
+    phoneController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       // decoration: BoxDecoration(border: Border.all()),
@@ -63,7 +69,6 @@ class _PhoneAuthState extends State<PhoneAuth> {
               textFieldController: phoneController,
               autoValidateMode: AutovalidateMode.onUserInteraction,
               // selectorTextStyle: josefinSansSB20.copyWith(color: Colors.black),
-              autoFocus: true,
               keyboardAction: TextInputAction.done,
               // textStyle: josefinSansSB20.copyWith(color: Colors.black),
               inputDecoration: InputDecoration(

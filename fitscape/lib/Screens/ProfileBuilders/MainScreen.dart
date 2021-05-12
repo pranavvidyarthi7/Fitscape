@@ -1,4 +1,9 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitscape/PageNavigationAnimation/fadeTransition.dart';
+import 'package:fitscape/Screens/HomeScreen.dart';
+import 'package:fitscape/Screens/Main%20App%20Screens/MainAppScreen.dart';
 import 'package:fitscape/Services/User.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -61,67 +66,77 @@ class _MainScreenState extends State<MainScreen> {
     );
     FirebaseAuth _auth = FirebaseAuth.instance;
     print('phone  $phone');
-    bool success = false;
+    print("START");
+    final completer = Completer<bool>();
     await _auth.verifyPhoneNumber(
-        timeout: Duration(seconds: 40),
-        phoneNumber: phone,
-        verificationCompleted: /*VERIFICATION COMPLETES AUTOMATICALLY*/ (PhoneAuthCredential
-            phoneAuthCredential) async {
-          if (phoneAuthCredential.token != null) {
-            Navigator.pop(context);
-            Provider.of<AppUser>(context, listen: false).setPhone(phone);
-            // try {
-            //   success = await Provider.of<ServerRequests>(context,
-            //           listen: false)
-            //       .updateProfile(Provider.of<AppUser>(context, listen: false));
-            // } on PlatformException catch (e) {
-            //   //SHOW ERROR ON UPDATE PROFILE
-            //   await errorBox(context, e);
-            //   success = false;
-            // }
-          } else {
-            Navigator.pop(context); //Remove Circular indicator
-            await errorBox(
-              context,
-              PlatformException(
-                  code: 'Something went wrong',
-                  message: 'Something went wrong. Try again after sometime.',
-                  details: 'single'),
-            );
-          }
-        },
-        verificationFailed: (FirebaseAuthException authException) async {
+      timeout: Duration(seconds: 40),
+      phoneNumber: phone,
+      verificationCompleted: /*VERIFICATION COMPLETES AUTOMATICALLY*/ (PhoneAuthCredential
+          phoneAuthCredential) {
+        print("WORKING 1");
+        if (phoneAuthCredential.token != null) {
+          Navigator.pop(context);
+          Provider.of<AppUser>(context, listen: false).setPhone(phone);
+          completer.complete(true);
+          // try {
+          //   success = await Provider.of<ServerRequests>(context,
+          //           listen: false)
+          //       .updateProfile(Provider.of<AppUser>(context, listen: false));
+          // } on PlatformException catch (e) {
+          //   //SHOW ERROR ON UPDATE PROFILE
+          //   await errorBox(context, e);
+          //   success = false;
+          // }
+        } else {
+          print("NOT GOOD");
           Navigator.pop(context); //Remove Circular indicator
-          await errorBox(
+          errorBox(
             context,
             PlatformException(
                 code: 'Something went wrong',
                 message: 'Something went wrong. Try again after sometime.',
                 details: 'single'),
           );
-        },
-        codeSent: (String verificationId, [int forceResendingToken]) async {
-          print('SENT');
-        },
-        codeAutoRetrievalTimeout: (String verificationId) async {
-          print('TIMEOUT');
-          Navigator.pop(
-              context); //ERROR PHONE AUTH NOT DONE TRY AGAIN AFTERWARDS
-          await errorBox(
-            context,
-            PlatformException(
-                code: 'Error phone not verified',
-                message:
-                    'OTP not recieved in time.Needs strong network.Try again after sometime',
-                details: 'single'),
-          );
-        });
-    return success;
+          completer.complete(false);
+        }
+        print("CAME HERE");
+      },
+      verificationFailed: (FirebaseAuthException authException) {
+        Navigator.pop(context); //Remove Circular indicator
+        errorBox(
+          context,
+          PlatformException(
+              code: 'Something went wrong',
+              message: 'Something went wrong. Try again after sometime.',
+              details: 'single'),
+        );
+        completer.complete(false);
+      },
+      codeSent: (String verificationId, [int forceResendingToken]) {
+        print('SENT');
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        print('TIMEOUT');
+        Navigator.pop(context); //ERROR PHONE AUTH NOT DONE TRY AGAIN AFTERWARDS
+        errorBox(
+          context,
+          PlatformException(
+              code: 'Error phone not verified',
+              message:
+                  'OTP not recieved in time.Needs strong network.Try again after sometime',
+              details: 'single'),
+        );
+        completer.complete(false);
+      },
+    );
+    print("WORKING without wait");
+    return completer.future;
   }
 
   Future<bool> phoneVerify() async {
     if (phone != null && phone.parseNumber().length == 10) {
-      return await phoneauthFirebase(phone.toString());
+      print("DONE");
+      return phoneauthFirebase(phone.toString());
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -137,7 +152,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<bool> checkOTP() async {
+    // print("Validate: $validate");
     if (validate) {
+      // print("OTP: $_otp");
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -164,7 +181,8 @@ class _MainScreenState extends State<MainScreen> {
       //   success = false;
       Navigator.pop(context);
       // }
-      return success;
+      // return success; //TODO: Change this
+      return true;
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -180,6 +198,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<bool> updateNameandPic() async {
+    print("Validate: $validate");
     if (validate) {
       showDialog(
         barrierDismissible: false,
@@ -197,6 +216,7 @@ class _MainScreenState extends State<MainScreen> {
       );
       bool success = false;
       Provider.of<AppUser>(context, listen: false).setName(_name);
+      Provider.of<AppUser>(context, listen: false).photoURL = _pic;
       // try {
       //   success = await Provider.of<ServerRequests>(context,
       //           listen: false)
@@ -208,7 +228,8 @@ class _MainScreenState extends State<MainScreen> {
       //   success = false;
       Navigator.pop(context);
       // }
-      return success;
+      // return success;//TODO: Change this
+      return true;
     }
     return false;
   }
@@ -241,7 +262,8 @@ class _MainScreenState extends State<MainScreen> {
     //   success = false;
     Navigator.pop(context);
     // }
-    return success;
+    // return success;//TODO: Change this
+    return true;
   }
 
   Future<bool> updateHeight() async {
@@ -272,7 +294,8 @@ class _MainScreenState extends State<MainScreen> {
     //   success = false;
     Navigator.pop(context);
     // }
-    return success;
+    // return success;//TODO:Change
+    return true;
   }
 
   Future<bool> updateWeight() async {
@@ -303,23 +326,25 @@ class _MainScreenState extends State<MainScreen> {
     //   success = false;
     Navigator.pop(context);
     // }
-    return success;
+    // return success;//TODO:Change
+    return true;
   }
 
   Future<bool> next() async {
+    print("PAGE: $_page");
     switch (_page) {
       case 1:
-        return await checkOTP();
+        return checkOTP();
       case 2:
-        return await updateNameandPic();
+        return updateNameandPic();
       case 3:
-        return await updateGender();
+        return updateGender();
       case 4:
-        return await phoneVerify();
+        return phoneVerify();
       case 5:
-        return await updateWeight();
+        return updateWeight();
       case 6:
-        return await updateHeight();
+        return updateHeight();
       //TODO: Implement for page 7
       default:
         return true;
@@ -364,7 +389,7 @@ class _MainScreenState extends State<MainScreen> {
         child: Scaffold(
           body: SingleChildScrollView(
             child: Container(
-              height: 100 * boxSizeV,
+              // height: 100 * boxSizeV,
               width: 100 * boxSizeH,
               decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -381,30 +406,32 @@ class _MainScreenState extends State<MainScreen> {
                       alignment: Alignment.centerLeft,
                       children: [
                         GestureDetector(
-                            onTap: () async {
-                              //Ask for logout
-                              bool val = await errorBox(
-                                context,
-                                PlatformException(
-                                  code: 'Logout',
-                                  message: 'Are you sure you want to logout?',
-                                  details: 'double',
-                                ),
-                              );
-                              print(val);
-                              if (val) {
-                                store.clear();
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                      builder: (context) => AuthScreen(),
-                                    ),
-                                    (route) => false);
-                              }
-                            },
-                            child: Icon(
-                              Icons.arrow_back_ios,
-                              size: 32,
-                            )),
+                          onTap: () async {
+                            //Ask for logout
+                            bool val = await errorBox(
+                              context,
+                              PlatformException(
+                                code: 'Logout',
+                                message: 'Are you sure you want to logout?',
+                                details: 'double',
+                              ),
+                            );
+                            print(val);
+                            if (val) {
+                              store.clear();
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  fadeTransition(
+                                    page: HomeScreen(),
+                                    duration: Duration(milliseconds: 800),
+                                  ),
+                                  (route) => false);
+                            }
+                          },
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            size: 32,
+                          ),
+                        ),
                         Center(
                           child: Container(
                             width: 150 / 3.6 * boxSizeH,
@@ -419,7 +446,7 @@ class _MainScreenState extends State<MainScreen> {
                               animateFromLastPercent: true,
                               lineHeight: 1.2 * boxSizeV,
                               curve: Curves.easeInOut,
-                              percent: .5,
+                              percent: _percent,
                               animation: true,
                               animationDuration: 2000,
                               backgroundColor: Color(0xffE5E5E5),
@@ -448,7 +475,7 @@ class _MainScreenState extends State<MainScreen> {
                             : 45 / 6.4 * boxSizeV,
                         bottom: 22 / 6.4 * boxSizeV),
                     child: Text(
-                      'Step $_page/6',
+                      'Step $_page/7',
                       style: robotoSB13.copyWith(color: Color(0xff563FE5)),
                     ),
                   ),
@@ -470,14 +497,21 @@ class _MainScreenState extends State<MainScreen> {
                                 validate = false;
                             })
                           : _page == 2
-                              ? ProfilePicPage(change: (name, pic) {
-                                  _name = name;
-                                  _pic = pic;
-                                  if (_name == null || _name == '')
-                                    validate = false;
-                                  else
-                                    validate = true;
-                                })
+                              ? ProfilePicPage(
+                                  name: Provider.of<AppUser>(context,
+                                          listen: false)
+                                      .name,
+                                  pic: Provider.of<AppUser>(context,
+                                          listen: false)
+                                      .photoURL,
+                                  change: (name, pic) {
+                                    _name = name;
+                                    _pic = pic;
+                                    if (_name == null || _name == '')
+                                      validate = false;
+                                    else
+                                      validate = true;
+                                  })
                               : _page == 3
                                   ? GenderPage(change: (gender) {
                                       _gender = gender ? 'Female' : 'Male';
@@ -506,15 +540,25 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      print("TAP");
+                      // print("TAP");
                       bool condition = false;
                       condition = await next();
+                      // print('condition val: $condition');
                       Provider.of<AppUser>(context, listen: false).printUser();
                       if (condition) {
                         setState(() {
                           _percentIncrement();
                           if (_page <= 7) _page++;
                         });
+                        if (_page >= 8)
+                          //TODO:Add request here
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              fadeTransition(
+                                page: MainAppScreen(),
+                                duration: Duration(milliseconds: 800),
+                              ),
+                              (route) => false);
                       }
                     },
                     child: Container(
