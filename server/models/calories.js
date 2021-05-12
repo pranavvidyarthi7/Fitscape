@@ -13,6 +13,11 @@ const CaloriesSchema = new mongoose.Schema(
             type:Number,
            
         },
+        target:{
+            type:Number,
+           
+        },
+
         belongsTo:{
             type: mongoose.Schema.ObjectId,
             ref: 'users',
