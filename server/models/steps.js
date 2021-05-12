@@ -3,7 +3,8 @@ const StepsSchema = new mongoose.Schema(
     { 
         timestamp:{
             type: Number,
-            default: Date.now
+            default: Date.now,
+            required: true
         },
         target:{
             type:Number
@@ -11,7 +12,10 @@ const StepsSchema = new mongoose.Schema(
         stepsTaken:{
             type:Number
           
-        },distance:{
+        },distanceTarget:{
+            type:Number
+        },
+        distanceCovered:{
             type:Number
         },
         belongsTo:{

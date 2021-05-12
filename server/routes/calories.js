@@ -13,5 +13,6 @@ const { protectUser } = require('../middleware/auth');
 
 
 router.post('/settarget',[protectUser],calorieController.settarget);
-router.put('/update',[protectUser],waterController.update);
+router.get('/getcalories',[protectUser],calorieController.getcalories);
+router.put('/update',[protectUser],calorieController.update);
 module.exports = router;
