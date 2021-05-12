@@ -61,24 +61,24 @@ class _LogicState extends State<Logic> {
     //     .children[1]
     //     .text
     //     .trim());
-    try {
-      res = await http.post(
-        Uri.https('preview.antbits.com',
-            '/choices_production/calorie_checker/proxy.php'),
-        body: {"val": Uri.encodeComponent('butter chicken')},
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      );
-    } catch (e) {
-      print("ERROR $e");
-    }
-    print(res.body);
-    print(jsonDecode(res.body)["results"]["products"].length);
+    // try {
+    //   res = await http.post(
+    //     Uri.https('preview.antbits.com',
+    //         '/choices_production/calorie_checker/proxy.php'),
+    //     body: {"val": Uri.encodeComponent('butter chicken')},
+    //     headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    //   );
+    // } catch (e) {
+    //   print("ERROR $e");
+    // }
+    // print(res.body);
+    // print(jsonDecode(res.body)["results"]["products"].length);
+    res = await http.get(Uri.https('www.nutracheck.co.uk',
+        '/CaloriesIn/Product/Search', {'desc': 'burger'}));
   }
 
   @override
   Widget build(BuildContext context) {
-    print(Uri.https('nutritiondata.self.com', '/tools/calories-burned')
-        .toString());
     return Scaffold(
       body: Center(
         child: MaterialButton(
