@@ -44,6 +44,7 @@ module.exports.updateintake=async(req,res) =>{
     else
     {
         try{
+            const updateData = { ... req.body}
             const waterIntake = await Water.findOneAndUpdate({belongsTo:req.user.id},updateData,{
                 returnOriginal:false
             })
@@ -51,8 +52,8 @@ module.exports.updateintake=async(req,res) =>{
             {
                 waterIntake.consumed=0
             }
-            const updateData = { ...req.body };
             
+
               //waterIntake.save();
               console.log(waterIntake);
            

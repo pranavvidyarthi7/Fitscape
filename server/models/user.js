@@ -35,18 +35,14 @@ const UserSchema = new mongoose.Schema(
                
         
         },
-        hunit:{
-            type:String
-        },
+       
         weight:{
             
             type:String,
             
            
         },
-        wunit:{
-            type:String,
-        },
+       
         bmi:{
            
             type:Number

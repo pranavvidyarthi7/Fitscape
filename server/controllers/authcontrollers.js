@@ -130,6 +130,7 @@
        
       
     }
+    
 
 
     //Route to get user profile
@@ -139,28 +140,28 @@
       return res.status(400).send('error occured');
       }
         try {
-          //console.log(req.user);
-          const user = await User.findById(req.user.id);
-          const water = await Water.findOne({belongsTo:req.user.id})
-          const calories = await Calories.findOne({belongsTo:req.user.id})
-          const steps = await Steps.findOne({belongsTo:req.user.id})
-          const username=user.name;
-          const height=user.height
-          const weight=user.weight
-          const dashboard ={
-           username,
-           weight,
-           height,
-            water,
-            calories,
-            steps,
-            
-          }
-
-          if (!user) {
-            return  res.status(400).send({ error: "No user found" });
-           
-          }
+        //console.log(req.user);
+        const user = await User.findById(req.user.id);
+        const water = await Water.findOne({belongsTo:req.user.id})
+        const calories = await Calories.findOne({belongsTo:req.user.id})
+        const steps = await Steps.findOne({belongsTo:req.user.id})
+        const username=user.name;
+        const height=user.height
+        const weight=user.weight
+        const dashboard ={
+          user,
+         username,
+         weight,
+         height,
+         water,
+         calories,
+        steps,
+          
+        }
+        if (!user) {
+          return  res.status(400).send({ error: "No user found" });
+         
+        }
           res.status(200).json({
             success: true,
             data: dashboard,

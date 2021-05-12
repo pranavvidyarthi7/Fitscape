@@ -15,17 +15,19 @@ module.exports.settarget=async(req,res) =>{
     else
     {
         try{
-            const{target,stepsTaken,distance}=req.body
+            const{target,stepsTaken,distanceTarget,distanceCovered}=req.body
             const user = await User.findById(req.user.id)
-            const Step = new Step({
+            const newStep = new Step({
                 target,
                 stepsTaken,
-                distance,
+                distanceTarget,
+                distanceCovered,
                 belongsTo:user
             });
             //console.log(Step);
-           console.log("calorie burning target set")
-            return res.status(200).json(Step);
+            await newStep.save();
+           console.log(newStep)
+            return res.status(200).json(newStep);
         }catch(err){
             console.log(err)
                   return res.status(404).send({ error: "server error" });
@@ -50,16 +52,54 @@ module.exports.update=async(req,res) =>{
             const stepsData = await Step.findOneAndUpdate({belongsTo:req.user.id},updateData,{
                 returnOriginal:false
             })
-            if(stepsData.timestamp != Date.now())
+            if(stepsData != null)
             {
-                stepsData.consumed=0
+                if(stepsData.timestamp != Date.now())
+                {
+                    stepsData.consumed=0
+                }
             }
+            
             
             
               //stepsData.save();
               console.log(stepsData);
            
             return res.status(200).send("steps data updated");
+        }catch(err){
+            console.log(err)
+                  return res.status(404).send({ error: "server error" });
+        }
+        
+
+
+    }
+}
+
+
+//Route to get steps data
+module.exports.getsteps=async(req,res) =>{
+    console.log('get steps data');
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+    return res.status(400).send('error occured');
+    }
+    else
+    {
+        try{
+            
+            const stepsData = await Step.findOne({belongsTo:req.user.id})
+           
+            
+            
+            
+              
+              console.log(stepsData);
+           
+            return res.status(200).json({
+                success: true,
+                data:stepsData
+            })
         }catch(err){
             console.log(err)
                   return res.status(404).send({ error: "server error" });

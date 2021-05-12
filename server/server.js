@@ -17,6 +17,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 const userroutes = require('./routes/userroutes.js');
 const waterroutes = require('./routes/water.js')
 const eventroutes = require('./routes/eventsroutes.js')
+const stepsroutes = require('./routes/stepsroutes.js')
+const calorieroutes = require('./routes/calories.js')
 
 // access config var
 process.env.TOKEN_SECRET;
@@ -38,5 +40,7 @@ app.use(passport.session());
 app.use('/api/user', userroutes);
 app.use('/api/water', waterroutes);
 app.use('/api/events', eventroutes);
+app.use('/api/steps',stepsroutes);
+app.use('/api/calories',calorieroutes);
 
 const server = app.listen(PORT, console.log(`Server started on Port ${PORT}`));
