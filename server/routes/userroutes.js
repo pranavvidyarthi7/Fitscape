@@ -11,6 +11,8 @@ const authController = require('../controllers/authcontrollers');
 // * Middlewares
 const { protectUser } = require('../middleware/auth'); 
 
+
+router.post('/gauth',authController.gauth);
 router.post('/signup',authController.signup);
 router.post('/login',authController.login);
 router.put('/update',[protectUser],authController.update);
