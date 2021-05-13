@@ -7,6 +7,9 @@ const UserSchema = new mongoose.Schema(
             
             type:String
         },
+        avatar:{
+            type:String
+        },
         email:{
             required:true,
             type:String,
@@ -51,10 +54,12 @@ const UserSchema = new mongoose.Schema(
             type:Number
         },
         pregnant:{
-            type:String
+            type:String,
+            default:"pregnant0"
         },lifestyle:
         {
-            type:Number
+            type:Number,
+            default:0
         },
         role:{
             type: String,
