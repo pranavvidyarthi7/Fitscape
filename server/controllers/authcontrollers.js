@@ -78,8 +78,14 @@
             return res.status(404).send({ error: "Invalid credentials" });
            
           }
-          res.send('user succesfully logged in')
-          console.log('logged in ');
+          function generateAccessToken(user) {
+            return jwt.sign(user, process.env.TOKEN_SECRET);
+          }
+
+          
+          const token = generateAccessToken({_id: user._id });   
+          return res.json(token).status(200);
+          //console.log('logged in ');
           
         } catch (err) {
           console.log(err);
@@ -145,14 +151,8 @@
         const water = await Water.findOne({belongsTo:req.user.id})
         const calories = await Calories.findOne({belongsTo:req.user.id})
         const steps = await Steps.findOne({belongsTo:req.user.id})
-        const username=user.name;
-        const height=user.height
-        const weight=user.weight
         const dashboard ={
           user,
-         username,
-         weight,
-         height,
          water,
          calories,
         steps,
