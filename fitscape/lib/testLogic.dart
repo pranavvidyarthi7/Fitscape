@@ -1,9 +1,13 @@
 import 'dart:convert';
 
+import 'package:fitscape/Variables.dart';
+import 'package:fitscape/WidgetResizing.dart';
 import 'package:flutter/material.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
+
+import './UI Components/DashedCircle.dart';
 
 class Logic extends StatefulWidget {
   @override
@@ -79,11 +83,15 @@ class _LogicState extends State<Logic> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    boxSizeH = SizeConfig.safeBlockHorizontal;
+    boxSizeV = SizeConfig.safeBlockVertical;
     return Scaffold(
       body: Center(
-        child: MaterialButton(
-          onPressed: method,
-          child: Text("SUBMIT"),
+        child: DashedCircle(
+          radius: 92 * boxSizeH / 3.6,
+          dashes: 20,
+          gap: 1.5,
         ),
       ),
     );

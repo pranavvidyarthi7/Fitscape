@@ -13,10 +13,10 @@ class _CalorieBurntPageState extends State<CalorieBurntPage> {
   @override
   Widget build(BuildContext context) {
     // NOTE all must add to 1
-    double body_percent = 0.2;
-    double step_percent = 0.6;
-    double other_percent = 0.2;
-    int cal_number = 31;
+    double bodyPercent = 0.2;
+    double stepPercent = 0.6;
+    double otherPercent = 0.2;
+    int calNumber = 31;
     return Column(
       children: [
         Row(
@@ -85,8 +85,8 @@ class _CalorieBurntPageState extends State<CalorieBurntPage> {
             CircularPercentIndicator(
               radius: 190 / 3.6 * boxSizeH,
               lineWidth: 30 / 3.6 * boxSizeH,
-              percent: step_percent,
-              startAngle: (270 + body_percent * 360),
+              percent: stepPercent,
+              startAngle: (270 + bodyPercent * 360),
               backgroundColor: Colors.transparent,
               progressColor: Color(0xff8980F6),
               circularStrokeCap: CircularStrokeCap.butt,
@@ -94,7 +94,7 @@ class _CalorieBurntPageState extends State<CalorieBurntPage> {
             CircularPercentIndicator(
               radius: 190 / 3.6 * boxSizeH,
               lineWidth: 30 / 3.6 * boxSizeH,
-              percent: body_percent,
+              percent: bodyPercent,
               startAngle: 270,
               backgroundColor: Colors.transparent,
               progressColor: Color(0xff66DEEE),
@@ -105,7 +105,7 @@ class _CalorieBurntPageState extends State<CalorieBurntPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '$cal_number',
+                    '$calNumber',
                     style: GoogleFonts.roboto(
                         fontSize: 35.0, fontWeight: FontWeight.w800),
                   ),
@@ -120,8 +120,8 @@ class _CalorieBurntPageState extends State<CalorieBurntPage> {
               ),
               radius: 190 / 3.6 * boxSizeH,
               lineWidth: 30 / 3.6 * boxSizeH,
-              percent: other_percent,
-              startAngle: (270 + body_percent * 360 + step_percent * 360),
+              percent: otherPercent,
+              startAngle: (270 + bodyPercent * 360 + stepPercent * 360),
               backgroundColor: Colors.transparent,
               progressColor: Color(0xff1D8DFD),
               circularStrokeCap: CircularStrokeCap.butt,
@@ -131,6 +131,7 @@ class _CalorieBurntPageState extends State<CalorieBurntPage> {
         Align(
           alignment: Alignment.centerRight,
           child: FloatingActionButton(
+            heroTag: null,
             onPressed: () {},
             backgroundColor: Color(0xff1D8DFD),
             child: Icon(FontAwesomeIcons.plus),

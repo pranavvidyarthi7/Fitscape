@@ -34,6 +34,7 @@ class _HeightPageState extends State<HeightPage> {
       data.add(i);
       cm.add(i);
     }
+    widget.change('$h ${unit ? 'cm' : 'in'}');
   }
 
   @override

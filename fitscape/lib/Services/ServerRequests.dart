@@ -45,6 +45,46 @@ class ServerRequests {
     }
   }
 
+  Future<bool> registerGAuth(AppUser appUser) async {
+    print('GAuth SignUp SENT');
+    http.Response res = await http.post(
+      Uri.https(_url, '/api/user/gauth'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': appUser.email,
+        'password': appUser.password,
+        'name': appUser.name,
+        'avatar': appUser.photoURL,
+        'gender': appUser.gender,
+        'phone': appUser.phone,
+      }),
+    );
+    if (res.statusCode == 200) {
+      print("DONE");
+      await store.setString('token', jsonDecode(res.body));
+      return true;
+    } else {
+      print(res.statusCode);
+      print(res.body);
+      switch (res.statusCode) {
+        case 500:
+          throw PlatformException(
+              code: 'Email Already In Use',
+              message:
+                  'There is already a user with this email. Please use different email.',
+              details: 'single');
+          break;
+        default:
+          throw PlatformException(
+              code: 'Server Down',
+              message: 'The server is down. Restart the app after some time.',
+              details: 'single');
+      }
+    }
+  }
+
   Future<bool> login(AppUser appUser) async {
     print('Login SENT');
     http.Response res;
@@ -193,14 +233,23 @@ class ServerRequests {
   Future<bool> updateProfile(AppUser appUser) async {
     print('Update Profile SENT');
     http.Response res = await http.put(
-      Uri.https(_url, '/api/user/complete-profile'),
+      Uri.https(_url, '/api/user/update'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'authorization': 'Bearer ${store.getString('token')}',
       },
-      body: jsonEncode(<String, String>{
-        'phone': appUser.phone,
+      body: jsonEncode(<String, dynamic>{
         'name': appUser.name,
+        'avatar': appUser.photoURL,
+        'gender': appUser.gender,
+        if (appUser.phone != null && appUser.phone != '')
+          'phone': appUser.phone ?? "",
+        'weight': appUser.weight,
+        'height': appUser.height,
+        // 'age': appUser.age, //integer
+        // if (appUser.gender == 'Female') 'pregnant': appUser.femaleStatus,
+        // 'lifestyle': appUser.lifestyle, //integer
+        // 'basicCalBurn': appUser.basicCalBurn //integer
       }),
     );
     if (res.statusCode == 200) {

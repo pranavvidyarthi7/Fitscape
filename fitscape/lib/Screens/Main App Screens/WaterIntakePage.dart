@@ -15,8 +15,8 @@ class WaterIntakePage extends StatefulWidget {
 class _WaterIntakePageState extends State<WaterIntakePage> {
   @override
   Widget build(BuildContext context) {
-    int waterintake = 500;
-    double water_percent = 0.5;
+    // int waterintake = 500;
+    double waterPercent = 0.5;
     int goal = 2500;
     Size dropsize = Size(227 / 3.6 * boxSizeH, 360 / 6.4 * boxSizeV);
     SizeConfig().init(context);
@@ -94,7 +94,7 @@ class _WaterIntakePageState extends State<WaterIntakePage> {
                   top: 6 / 6.4 * boxSizeV,
                 ),
                 child: LiquidCustomProgressIndicator(
-                  value: water_percent,
+                  value: waterPercent,
                   direction: Axis.vertical,
                   valueColor: AlwaysStoppedAnimation(Color(0xff42C9FF)),
                   shapePath: _buildPath(dropsize),
@@ -104,7 +104,7 @@ class _WaterIntakePageState extends State<WaterIntakePage> {
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${(water_percent * 100).toInt()}%',
+                        '${(waterPercent * 100).toInt()}%',
                         style: GoogleFonts.roboto(
                           fontSize: 43,
                           fontWeight: FontWeight.w600,
@@ -126,6 +126,7 @@ class _WaterIntakePageState extends State<WaterIntakePage> {
                   right: 0,
                   bottom: 6 / 6.4 * boxSizeV,
                   child: FloatingActionButton(
+                    heroTag: null,
                     onPressed: () {},
                     child: Icon(FontAwesomeIcons.plus),
                   ))

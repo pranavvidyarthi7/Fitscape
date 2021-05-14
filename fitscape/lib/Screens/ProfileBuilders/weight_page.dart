@@ -33,6 +33,7 @@ class _WeightPageState extends State<WeightPage> {
       lbs.add(i);
       data.add(i);
     }
+    widget.change('$w ${unit ? 'lbs' : 'kg'}');
   }
 
   @override

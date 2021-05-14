@@ -1,10 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitscape/PageNavigationAnimation/fadeTransition.dart';
-import 'package:fitscape/Screens/HomeScreen.dart';
-import 'package:fitscape/Screens/Main%20App%20Screens/MainAppScreen.dart';
-import 'package:fitscape/Services/User.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,7 +8,11 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
-import '../AuthScreen.dart';
+import '../../PageNavigationAnimation/fadeTransition.dart';
+import '../HomeScreen.dart';
+import '../Main%20App%20Screens/MainAppScreen.dart';
+import '../../Services/ServerRequests.dart';
+import '../../Services/User.dart';
 import '../../UI Components/ErrorBox.dart';
 import '../../Variables.dart';
 import '../../WidgetResizing.dart';
@@ -65,30 +65,28 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
     FirebaseAuth _auth = FirebaseAuth.instance;
-    print('phone  $phone');
-    print("START");
     final completer = Completer<bool>();
     await _auth.verifyPhoneNumber(
       timeout: Duration(seconds: 40),
       phoneNumber: phone,
       verificationCompleted: /*VERIFICATION COMPLETES AUTOMATICALLY*/ (PhoneAuthCredential
-          phoneAuthCredential) {
-        print("WORKING 1");
+          phoneAuthCredential) async {
         if (phoneAuthCredential.token != null) {
-          Navigator.pop(context);
-          Provider.of<AppUser>(context, listen: false).setPhone(phone);
-          completer.complete(true);
-          // try {
-          //   success = await Provider.of<ServerRequests>(context,
-          //           listen: false)
-          //       .updateProfile(Provider.of<AppUser>(context, listen: false));
-          // } on PlatformException catch (e) {
-          //   //SHOW ERROR ON UPDATE PROFILE
-          //   await errorBox(context, e);
-          //   success = false;
-          // }
+          Provider.of<AppUser>(context, listen: false).fromForm(phone: phone);
+          bool success = false;
+          try {
+            success = await Provider.of<ServerRequests>(context, listen: false)
+                .updateProfile(Provider.of<AppUser>(context, listen: false));
+          } on PlatformException catch (e) {
+            Navigator.pop(context); //SHOW ERROR ON UPDATE PROFILE
+            errorBox(context, e);
+            completer.complete(false);
+          }
+          if (success) {
+            Navigator.pop(context);
+            completer.complete(success);
+          }
         } else {
-          print("NOT GOOD");
           Navigator.pop(context); //Remove Circular indicator
           errorBox(
             context,
@@ -99,7 +97,6 @@ class _MainScreenState extends State<MainScreen> {
           );
           completer.complete(false);
         }
-        print("CAME HERE");
       },
       verificationFailed: (FirebaseAuthException authException) {
         Navigator.pop(context); //Remove Circular indicator
@@ -129,13 +126,11 @@ class _MainScreenState extends State<MainScreen> {
         completer.complete(false);
       },
     );
-    print("WORKING without wait");
     return completer.future;
   }
 
   Future<bool> phoneVerify() async {
     if (phone != null && phone.parseNumber().length == 10) {
-      print("DONE");
       return phoneauthFirebase(phone.toString());
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -152,9 +147,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<bool> checkOTP() async {
-    // print("Validate: $validate");
     if (validate) {
-      // print("OTP: $_otp");
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -175,7 +168,6 @@ class _MainScreenState extends State<MainScreen> {
       //           listen: false)
       //       .checkOTP(_otp);
       // } on PlatformException catch (e) {
-      //   //TODO Impliment RESEND OTP BTN
       //   print(e.code);
       //   await errorBox(context, e);
       //   success = false;
@@ -198,7 +190,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<bool> updateNameandPic() async {
-    print("Validate: $validate");
     if (validate) {
       showDialog(
         barrierDismissible: false,
@@ -215,21 +206,19 @@ class _MainScreenState extends State<MainScreen> {
         ),
       );
       bool success = false;
-      Provider.of<AppUser>(context, listen: false).setName(_name);
+      Provider.of<AppUser>(context, listen: false).fromForm(name: _name);
       Provider.of<AppUser>(context, listen: false).photoURL = _pic;
-      // try {
-      //   success = await Provider.of<ServerRequests>(context,
-      //           listen: false)
-      //       .updateProfile();
-      // } on PlatformException catch (e) {
-      //   //TODO Impliment RESEND OTP BTN
-      //   print(e.code);
-      //   await errorBox(context, e);
-      //   success = false;
-      Navigator.pop(context);
-      // }
-      // return success;//TODO: Change this
-      return true;
+      try {
+        success = await Provider.of<ServerRequests>(context, listen: false)
+            .updateProfile(Provider.of<AppUser>(context, listen: false));
+      } on PlatformException catch (e) {
+        print(e.code);
+        await errorBox(context, e);
+        success = false;
+        Navigator.pop(context);
+      }
+      if (success) Navigator.pop(context);
+      return success;
     }
     return false;
   }
@@ -250,20 +239,18 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
     bool success = false;
-    Provider.of<AppUser>(context, listen: false).setGender(_gender);
-    // try {
-    //   success = await Provider.of<ServerRequests>(context,
-    //           listen: false)
-    //       .updateProfile();
-    // } on PlatformException catch (e) {
-    //   //TODO Impliment RESEND OTP BTN
-    //   print(e.code);
-    //   await errorBox(context, e);
-    //   success = false;
-    Navigator.pop(context);
-    // }
-    // return success;//TODO: Change this
-    return true;
+    Provider.of<AppUser>(context, listen: false).fromForm(gender: _gender);
+    try {
+      success = await Provider.of<ServerRequests>(context, listen: false)
+          .updateProfile(Provider.of<AppUser>(context, listen: false));
+    } on PlatformException catch (e) {
+      print(e.code);
+      await errorBox(context, e);
+      success = false;
+      Navigator.pop(context);
+    }
+    if (success) Navigator.pop(context);
+    return success;
   }
 
   Future<bool> updateHeight() async {
@@ -283,19 +270,17 @@ class _MainScreenState extends State<MainScreen> {
     );
     bool success = false;
     Provider.of<AppUser>(context, listen: false).height = _height;
-    // try {
-    //   success = await Provider.of<ServerRequests>(context,
-    //           listen: false)
-    //       .updateProfile();
-    // } on PlatformException catch (e) {
-    //   //TODO Impliment RESEND OTP BTN
-    //   print(e.code);
-    //   await errorBox(context, e);
-    //   success = false;
-    Navigator.pop(context);
-    // }
-    // return success;//TODO:Change
-    return true;
+    try {
+      success = await Provider.of<ServerRequests>(context, listen: false)
+          .updateProfile(Provider.of<AppUser>(context, listen: false));
+    } on PlatformException catch (e) {
+      print(e.code);
+      await errorBox(context, e);
+      success = false;
+      Navigator.pop(context);
+    }
+    if (success) Navigator.pop(context);
+    return success;
   }
 
   Future<bool> updateWeight() async {
@@ -315,19 +300,17 @@ class _MainScreenState extends State<MainScreen> {
     );
     bool success = false;
     Provider.of<AppUser>(context, listen: false).weight = _weight;
-    // try {
-    //   success = await Provider.of<ServerRequests>(context,
-    //           listen: false)
-    //       .updateProfile();
-    // } on PlatformException catch (e) {
-    //   //TODO Impliment RESEND OTP BTN
-    //   print(e.code);
-    //   await errorBox(context, e);
-    //   success = false;
-    Navigator.pop(context);
-    // }
-    // return success;//TODO:Change
-    return true;
+    try {
+      success = await Provider.of<ServerRequests>(context, listen: false)
+          .updateProfile(Provider.of<AppUser>(context, listen: false));
+    } on PlatformException catch (e) {
+      print(e.code);
+      await errorBox(context, e);
+      success = false;
+      Navigator.pop(context);
+    }
+    if (success) Navigator.pop(context);
+    return success;
   }
 
   Future<bool> next() async {
@@ -518,9 +501,11 @@ class _MainScreenState extends State<MainScreen> {
                                     })
                                   : _page == 4
                                       ? PhoneAuth(
+                                          phone: Provider.of<AppUser>(context,
+                                                  listen: false)
+                                              .phone,
                                           change: (v) {
                                             phone = v;
-                                            print(phone);
                                           },
                                         )
                                       : _page == 5
@@ -540,10 +525,8 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      // print("TAP");
                       bool condition = false;
                       condition = await next();
-                      // print('condition val: $condition');
                       Provider.of<AppUser>(context, listen: false).printUser();
                       if (condition) {
                         setState(() {
@@ -551,7 +534,7 @@ class _MainScreenState extends State<MainScreen> {
                           if (_page <= 7) _page++;
                         });
                         if (_page >= 8)
-                          //TODO:Add request here
+                          //TODO:Add get events request here
                           Navigator.pushAndRemoveUntil(
                               context,
                               fadeTransition(

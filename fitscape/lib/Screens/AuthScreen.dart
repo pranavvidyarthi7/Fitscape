@@ -847,7 +847,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                             success = await Provider.of<
                                                         ServerRequests>(context,
                                                     listen: false)
-                                                .registerForm(Provider.of<
+                                                .registerGAuth(Provider.of<
                                                         AppUser>(context,
                                                     listen:
                                                         false)); //CHECKS FOR DUPLICATE USER

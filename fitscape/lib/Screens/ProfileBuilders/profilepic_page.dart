@@ -22,6 +22,7 @@ class _ProfilePicPageState extends State<ProfilePicPage> {
     _node = FocusNode();
     _nameController = TextEditingController();
     _nameController.text = widget.name ?? '';
+    _name = _nameController.text;
     super.initState();
   }
 
@@ -100,7 +101,7 @@ class _ProfilePicPageState extends State<ProfilePicPage> {
               ),
             ),
             onTap: () {
-              print("Upload from phoe change _pic value");
+              print("Upload from phone change _pic value Not Implemented yet");
             },
           ),
           Container(

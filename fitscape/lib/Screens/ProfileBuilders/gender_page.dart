@@ -13,6 +13,12 @@ class GenderPage extends StatefulWidget {
 class _GenderPageState extends State<GenderPage> {
   bool gender = true; //Female
   @override
+  void initState() {
+    widget.change(gender);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(

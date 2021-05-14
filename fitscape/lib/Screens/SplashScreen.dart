@@ -42,9 +42,10 @@ class _SplashScreenState extends State<SplashScreen> {
       }
       if (json != null) {
         widget.appUser.fromServer(json); //SETTING THE AppUSER IN PROVIDER
+        widget.appUser.printUser();
         //check profile complete or not
         final jsonObj = jsonDecode(json);
-        if (jsonObj['data']['username'] == null) {
+        if (jsonObj['data']['user']['name'] == null) {
           //Email verified
           //Start from Username and Pic
           Navigator.pushReplacement(
@@ -55,8 +56,8 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           );
-        } else if (jsonObj['data']['username'] != null &&
-            jsonObj['data']['gender'] == null) {
+        } else if (jsonObj['data']['user']['name'] != null &&
+            jsonObj['data']['user']['gender'] == null) {
           //Email and Username done
           //Start from Gender
           Navigator.pushReplacement(
@@ -67,9 +68,9 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           );
-        } else if (jsonObj['data']['username'] != null &&
-            jsonObj['data']['gender'] != null &&
-            jsonObj['data']['phone'] == null) {
+        } else if (jsonObj['data']['user']['name'] != null &&
+            jsonObj['data']['user']['gender'] != null &&
+            jsonObj['data']['user']['phone'] == null) {
           //Email, Username And Gender done
           //Start from Phone
           Navigator.pushReplacement(
@@ -80,10 +81,10 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           );
-        } else if (jsonObj['data']['username'] != null &&
-            jsonObj['data']['gender'] != null &&
-            jsonObj['data']['phone'] != null &&
-            jsonObj['data']['weight'] == null) {
+        } else if (jsonObj['data']['user']['name'] != null &&
+            jsonObj['data']['user']['gender'] != null &&
+            jsonObj['data']['user']['phone'] != null &&
+            jsonObj['data']['user']['weight'] == null) {
           //Email, Username, Gender And Phone done
           //Start from Weight
           Navigator.pushReplacement(
@@ -94,11 +95,11 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
           );
-        } else if (jsonObj['data']['username'] != null &&
-            jsonObj['data']['gender'] != null &&
-            jsonObj['data']['phone'] != null &&
-            jsonObj['data']['weight'] != null &&
-            jsonObj['data']['height'] == null) {
+        } else if (jsonObj['data']['user']['name'] != null &&
+            jsonObj['data']['user']['gender'] != null &&
+            jsonObj['data']['user']['phone'] != null &&
+            jsonObj['data']['user']['weight'] != null &&
+            jsonObj['data']['user']['height'] == null) {
           //Email, Username, Gender, Phone And Weight done
           //Start from Height
           Navigator.pushReplacement(
