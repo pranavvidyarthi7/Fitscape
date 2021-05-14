@@ -6,34 +6,35 @@ import '../Variables.dart';
 import './User.dart';
 
 class ServerRequests {
-  final String _url = '';
+  final String _url = 'fitscape.herokuapp.com';
 
 // TODO: CHECK TITLES
-  Future<bool> registerGoogle(AppUser appUser) async {
-    print('GsignUp SENT');
+  Future<bool> registerForm(AppUser appUser) async {
+    print('Form SignUp SENT');
     http.Response res = await http.post(
-      Uri.https(_url, '/api/user/firebase-signup'),
+      Uri.https(_url, '/api/user/signup'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'name': appUser.name,
         'email': appUser.email,
         'password': appUser.password,
-        'photo': appUser.photoURL
       }),
     );
     if (res.statusCode == 200) {
-      print('DONE');
-      await store.setString('token', jsonDecode(res.body)['token']);
+      print("DONE");
+      await store.setString('token', jsonDecode(res.body));
       return true;
     } else {
       print(res.statusCode);
       print(res.body);
       switch (res.statusCode) {
-        case 400:
+        case 500:
           throw PlatformException(
-              code: 'TITLE', message: res.body, details: 'single');
+              code: 'Email Already In Use',
+              message:
+                  'There is already a user with this email. Please use different email.',
+              details: 'single');
           break;
         default:
           throw PlatformException(
@@ -44,32 +45,35 @@ class ServerRequests {
     }
   }
 
-  Future<bool> registerForm(AppUser appUser) async {
-    print('Form SignUp SENT');
+  Future<bool> registerGAuth(AppUser appUser) async {
+    print('GAuth SignUp SENT');
     http.Response res = await http.post(
-      Uri.https(_url, '/api/user/signup'),
+      Uri.https(_url, '/api/user/gauth'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'name': appUser.name,
         'email': appUser.email,
         'password': appUser.password,
+        'name': appUser.name,
+        'avatar': appUser.photoURL,
+        'gender': appUser.gender,
+        'phone': appUser.phone,
       }),
     );
     if (res.statusCode == 200) {
       print("DONE");
-      await store.setString('token', jsonDecode(res.body)['token']);
+      await store.setString('token', jsonDecode(res.body));
       return true;
     } else {
       print(res.statusCode);
       print(res.body);
       switch (res.statusCode) {
-        case 400:
+        case 500:
           throw PlatformException(
-              code: 'TITLE',
-              message: res.body,
-              // 'There is already a user with this email. Please use different email.',
+              code: 'Email Already In Use',
+              message:
+                  'There is already a user with this email. Please use different email.',
               details: 'single');
           break;
         default:
@@ -99,21 +103,20 @@ class ServerRequests {
       print("error");
       print(e);
     }
-    print("HI");
-    print(res.reasonPhrase);
-    print(res.request);
-    print(res.headers);
     if (res.statusCode == 200) {
       print("DONE");
-      await store.setString('token', jsonDecode(res.body)['token']);
+      await store.setString('token', jsonDecode(res.body));
       return true;
     } else {
       print(res.statusCode);
       print(res.body);
       switch (res.statusCode) {
-        case 400:
+        case 404:
           throw PlatformException(
-              code: 'TITLE', message: "res.body", details: 'single');
+              code: 'Invalid Credentials',
+              message:
+                  "Enter the correct Password or you can rest it by clicking Forgot Password",
+              details: 'single');
           break;
         default:
           throw PlatformException(
@@ -201,7 +204,7 @@ class ServerRequests {
   Future<String> getUser(String token) async {
     print('GET User SENT');
     http.Response res = await http.get(
-      Uri.https(_url, '/api/user/me'),
+      Uri.https(_url, '/api/user/myprofile'),
       headers: {
         'authorization': 'Bearer ${store.getString('token')}',
       },
@@ -230,14 +233,23 @@ class ServerRequests {
   Future<bool> updateProfile(AppUser appUser) async {
     print('Update Profile SENT');
     http.Response res = await http.put(
-      Uri.https(_url, '/api/user/complete-profile'),
+      Uri.https(_url, '/api/user/update'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'authorization': 'Bearer ${store.getString('token')}',
       },
-      body: jsonEncode(<String, String>{
-        'phone': appUser.phone,
+      body: jsonEncode(<String, dynamic>{
         'name': appUser.name,
+        'avatar': appUser.photoURL,
+        'gender': appUser.gender,
+        if (appUser.phone != null && appUser.phone != '')
+          'phone': appUser.phone ?? "",
+        'weight': appUser.weight,
+        'height': appUser.height,
+        // 'age': appUser.age, //integer
+        // if (appUser.gender == 'Female') 'pregnant': appUser.femaleStatus,
+        // 'lifestyle': appUser.lifestyle, //integer
+        // 'basicCalBurn': appUser.basicCalBurn //integer
       }),
     );
     if (res.statusCode == 200) {

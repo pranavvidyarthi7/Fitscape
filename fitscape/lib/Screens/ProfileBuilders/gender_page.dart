@@ -13,6 +13,12 @@ class GenderPage extends StatefulWidget {
 class _GenderPageState extends State<GenderPage> {
   bool gender = true; //Female
   @override
+  void initState() {
+    widget.change(gender);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
@@ -36,6 +42,7 @@ class _GenderPageState extends State<GenderPage> {
                       width: 145 / 3.6 * boxSizeH,
                       height: 190 / 6.4 * boxSizeV,
                       decoration: BoxDecoration(
+                        color: gender ? Color(0xffB1ABEC) : Colors.white,
                         border: Border.all(
                           color: Color(gender ? 0xffFFFFFF : 0xffC4C4C4),
                         ),
@@ -49,11 +56,30 @@ class _GenderPageState extends State<GenderPage> {
                               offset: Offset(1, 3))
                         ],
                       ),
-                      child: SvgPicture.asset(
-                        'assets/svg/${gender ? 'femaleS' : 'femaleU'}.svg',
-                        //   width: 144 / 3.6 * boxSizeH,
-                        // height: 195/6.4*boxSizeV,
-                        fit: BoxFit.cover,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(25.0)),
+                            child: SvgPicture.asset(
+                              'assets/svg/${gender ? 'femaleS' : 'femaleU'}.svg',
+                              fit: BoxFit.fitHeight,
+                              height: 190 / 6.4 * boxSizeV,
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 18 / 6.4 * boxSizeV,
+                            child: Text(
+                              'Female',
+                              style: GoogleFonts.roboto(
+                                fontSize: 19,
+                                color: gender ? Colors.white : Colors.black,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     onTap: () {
@@ -70,23 +96,41 @@ class _GenderPageState extends State<GenderPage> {
                       width: 145 / 3.6 * boxSizeH,
                       height: 190 / 6.4 * boxSizeV,
                       decoration: BoxDecoration(
+                          color: gender ? Colors.white : Color(0xffB1ABEC),
                           border: Border.all(
                             color: Color(gender ? 0xffC4C4C4 : 0xffFFFFFF),
                           ),
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(25.0) //
-                                  ),
+                          borderRadius: BorderRadius.all(Radius.circular(25.0)),
                           boxShadow: [
                             BoxShadow(
                                 blurRadius: 20,
                                 color: Color(gender ? 0xffFFFFFF : 0xff8E85E3),
                                 offset: Offset(1, 3))
                           ]),
-                      child: SvgPicture.asset(
-                        'assets/svg/${gender ? 'maleU' : 'maleS'}.svg',
-                        // width: 144 / 3.6 * boxSizeH,
-                        // height: 190/6.4*boxSizeV,
-                        fit: BoxFit.fill,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(25.0)),
+                            child: SvgPicture.asset(
+                              'assets/svg/${gender ? 'maleU' : 'maleS'}.svg',
+                              fit: BoxFit.fitHeight,
+                              height: 190 / 6.4 * boxSizeV,
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 18 / 6.4 * boxSizeV,
+                            child: Text(
+                              'Male',
+                              style: GoogleFonts.roboto(
+                                fontSize: 19,
+                                color: gender ? Colors.black : Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     onTap: () {

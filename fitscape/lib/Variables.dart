@@ -7,7 +7,7 @@ double boxSizeH;
 double boxSizeV;
 //Bangers
 TextStyle bangersSB62 = GoogleFonts.bangers(fontSize: 65);
-const List<String> emoticons = [
+List<String> emoticons = [
   '😎',
   '👻',
   '😺',

@@ -1,6 +1,6 @@
-import 'package:fitscape/Screens/HomeScreen.dart';
 import 'package:fitscape/Screens/Main%20App%20Screens/MainAppScreen.dart';
 import 'package:fitscape/Screens/ProfileBuilders/MainScreen.dart';
+import 'package:fitscape/testLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,9 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import './Screens/SplashScreen.dart';
 import './Variables.dart';
-import 'Services/ServerRequests.dart';
-import 'Services/User.dart';
-import 'Services/auth.dart';
+import './Services/ServerRequests.dart';
+import './Services/User.dart';
+import './Services/auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,10 +27,6 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-
-    // return MaterialApp(
-    //   home: DashboardScreen(),
-    // );
     return MultiProvider(
       providers: [
         Provider<ServerRequests>(
@@ -43,9 +39,17 @@ class MyApp extends StatelessWidget {
           create: (context) => AppUser(),
         )
       ],
-      child: MaterialApp(
-        // home: SplashScreen(),
-        home: MainAppScreen(),
+      child: Consumer<AppUser>(
+        builder: (context, appUser, child) => Consumer<ServerRequests>(
+          builder: (context, serverRequests, child) => MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: SplashScreen(
+              appUser: appUser,
+              serverRequests: serverRequests,
+            ),
+            // home: Logic(),
+          ),
+        ),
       ),
     );
   }

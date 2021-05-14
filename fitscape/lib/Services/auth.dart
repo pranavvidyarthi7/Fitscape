@@ -9,7 +9,7 @@ class Auth {
   }
 
   Future<UserCredential> googleAuth() async {
-    final GoogleSignIn googleSignIn = GoogleSignIn(hostedDomain: 'thapar.edu');
+    final GoogleSignIn googleSignIn = GoogleSignIn();
     GoogleSignInAccount googleSignInAccount;
     GoogleSignInAuthentication googleSignInAuthentication;
     UserCredential authResult;

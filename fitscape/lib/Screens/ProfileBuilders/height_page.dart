@@ -15,8 +15,9 @@ class HeightPage extends StatefulWidget {
 }
 
 class _HeightPageState extends State<HeightPage> {
-  bool unit = true; //cm
-  List<int> data = [];
+  bool unit = true; //cm:230
+  //in:91
+  List<int> data = [], cm = [];
   int h;
   StreamController<int> _controller;
   GlobalKey<ScrollSnapListState> key2;
@@ -26,9 +27,14 @@ class _HeightPageState extends State<HeightPage> {
     key2 = new GlobalKey();
     h = 152;
     _controller = StreamController.broadcast();
-    for (int i = 0; i <= 280; i++) {
+    for (int i = 1; i <= 91; i++) {
       data.add(i);
     }
+    for (int i = 92; i <= 230; i++) {
+      data.add(i);
+      cm.add(i);
+    }
+    widget.change('$h ${unit ? 'cm' : 'in'}');
   }
 
   @override
@@ -76,8 +82,12 @@ class _HeightPageState extends State<HeightPage> {
                     ),
                     onTap: () {
                       setState(() {
-                        if (!unit)
-                          key2.currentState.focusToItem(max(0, h ~/ 2));
+                        if (!unit) {
+                          data.addAll(cm);
+                          print((h * 2.5).truncate());
+                          key2.currentState
+                              .focusToItem(min(231, (h * 2.54).truncate()) - 1);
+                        }
                         unit = true;
                       });
                     }),
@@ -111,8 +121,15 @@ class _HeightPageState extends State<HeightPage> {
                     ),
                     onTap: () {
                       setState(() {
-                        if (unit)
-                          key2.currentState.focusToItem(min(280, h * 2));
+                        if (unit) {
+                          key2.currentState
+                              .focusToItem(max(1, (h ~/ 2.54)) - 1);
+                          Future.delayed(Duration(milliseconds: 500), () {
+                            setState(() {
+                              data.removeRange(91, 230);
+                            });
+                          });
+                        }
                         unit = false;
                       });
                     }),
@@ -122,36 +139,37 @@ class _HeightPageState extends State<HeightPage> {
           StreamBuilder<int>(
             stream: _controller.stream,
             initialData: h,
-            builder: (context, snapshot) =>
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text('${snapshot.data} ',
-                    style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 40.0,
-                    ),),
-                    Text('${unit ? 'cm' : 'in'}',
-                   style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 24.0,
+            builder: (context, snapshot) => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Text(
+                  '${snapshot.data} ',
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 40.0,
+                  ),
                 ),
-                 ),
-                  ],
+                Text(
+                  '${unit ? 'cm' : 'in'}',
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 24.0,
+                  ),
                 ),
+              ],
+            ),
           ),
           ScrollSelector(
               gkey: key2,
               // key: ValueKey<int>(0),
-              index: h,
+              index: h - 1,
               data: data,
               change: (v) {
                 _controller.add(v);
                 h = v;
-                widget.change('$h ${unit ? 'cm' : 'ft'}');
+                widget.change('$h ${unit ? 'cm' : 'in'}');
               })
         ],
       ),

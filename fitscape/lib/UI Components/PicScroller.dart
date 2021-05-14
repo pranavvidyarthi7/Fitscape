@@ -6,11 +6,26 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
 class PicScroller extends StatefulWidget {
+  final Function(String) change;
+  final String pic;
+  PicScroller({this.change, this.pic});
   @override
   _PicScrollerState createState() => _PicScrollerState();
 }
 
 class _PicScrollerState extends State<PicScroller> {
+  int _focusedIndex = 2;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.pic != null) {
+      emoticons.insert(0, widget.pic);
+      _focusedIndex = 0;
+      widget.change(widget.pic);
+    } else
+      widget.change('emoticon:$_focusedIndex');
+  }
+
   Widget _buildItemList(BuildContext context, int index) {
     return Container(
       alignment: Alignment.center,
@@ -30,17 +45,21 @@ class _PicScrollerState extends State<PicScroller> {
               ]
             : null,
         color: index == _focusedIndex ? Color(0xff90ACFF) : Colors.white,
+        image: (widget.pic != null && index == 0)
+            ? DecorationImage(
+                image: NetworkImage(widget.pic), fit: BoxFit.cover)
+            : null,
         borderRadius: BorderRadius.all(
           Radius.circular(18),
         ),
         border: Border.all(
             color: index == _focusedIndex ? Colors.white : Colors.black),
       ),
-      child: Text('${emoticons[index]}'),
+      child: (widget.pic != null && index == 0)
+          ? null
+          : Text('${emoticons[index]}'),
     );
   }
-
-  int _focusedIndex = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +70,10 @@ class _PicScrollerState extends State<PicScroller> {
           onItemFocus: (index) {
             _focusedIndex = index;
             print(_focusedIndex);
+            if (widget.pic != null && _focusedIndex == 0) {
+              widget.change(widget.pic);
+            } else
+              widget.change('emoticon:$_focusedIndex');
           },
           itemBuilder: _buildItemList,
           itemSize: 72 / 3.6 * boxSizeH,

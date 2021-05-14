@@ -6,21 +6,31 @@ import '../../UI%20Components/PicScroller.dart';
 
 class ProfilePicPage extends StatefulWidget {
   final Function(String, String) change;
-  ProfilePicPage({this.change});
+  final String name, pic;
+  ProfilePicPage({this.change, this.name, this.pic});
   @override
   _ProfilePicPageState createState() => _ProfilePicPageState();
 }
 
 class _ProfilePicPageState extends State<ProfilePicPage> {
   TextEditingController _nameController;
-  String _pic = '';
+  String _pic = '', _name = '';
   FocusNode _node;
   bool valid = true;
   @override
   void initState() {
-    _nameController = TextEditingController();
     _node = FocusNode();
+    _nameController = TextEditingController();
+    _nameController.text = widget.name ?? '';
+    _name = _nameController.text;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _node.dispose();
+    _nameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -40,10 +50,15 @@ class _ProfilePicPageState extends State<ProfilePicPage> {
               bottom: 15 / 6.4 * boxSizeV,
             ),
             height: 100 / 6.4 * boxSizeV,
-            child: PicScroller(),
+            child: PicScroller(
+                change: (v) {
+                  _pic = v;
+                  widget.change(_name, _pic);
+                },
+                pic: widget.pic),
           ),
           Text(
-            'You can select from above emoji or',
+            'You can select from above',
             style: GoogleFonts.openSans(
               fontSize: 15.0,
               color: Colors.black,
@@ -85,7 +100,9 @@ class _ProfilePicPageState extends State<ProfilePicPage> {
                 ],
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              print("Upload from phone change _pic value Not Implemented yet");
+            },
           ),
           Container(
             child: Text(
@@ -125,15 +142,17 @@ class _ProfilePicPageState extends State<ProfilePicPage> {
               ),
               autocorrect: false,
               onChanged: (v) {
-                widget.change(v, _pic);
+                _name = v;
+                widget.change(_name, _pic);
                 setState(() {
-                  valid = (v != null && v != '');
+                  valid = (_name != null && _name != '');
                 });
               },
               onSubmitted: (v) {
-                widget.change(v, _pic);
+                _name = v;
+                widget.change(_name, _pic);
                 setState(() {
-                  valid = (v != null && v != '');
+                  valid = (_name != null && _name != '');
                 });
                 if (!valid) {
                   FocusScope.of(context).requestFocus(_node);

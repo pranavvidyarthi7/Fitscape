@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitscape/PageNavigationAnimation/fadeTransition.dart';
 import 'package:fitscape/Services/ServerRequests.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,15 +14,18 @@ import '../UI%20Components/ErrorBox.dart';
 import '../Screens/ProfileBuilders/MainScreen.dart';
 import '../Variables.dart';
 import '../WidgetResizing.dart';
+import 'Main App Screens/MainAppScreen.dart';
 
 class AuthScreen extends StatefulWidget {
+  final bool type;
+  AuthScreen({this.type});
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
 
 class _AuthScreenState extends State<AuthScreen> {
   FocusNode _emailFocus, _passFocus, _cPasswordFocus;
-  bool _page = true;
+  bool _page; //Login:true
   TextEditingController _emailController,
       _passwordController,
       _confirmPasswordController;
@@ -71,127 +75,145 @@ class _AuthScreenState extends State<AuthScreen> {
     bool success;
     if (_page) {
       //LOGIN
-      print("From Login NOT IMPLEMENTED YET");
-      // try {
-      //   success = await Provider.of<ServerRequests>(context, listen: false)
-      //       .login(Provider.of<AppUser>(context, listen: false));
-      // } on PlatformException catch (exp) {
-      //   Navigator.pop(context);
-      //   //SHOW ERROR
-      //   await errorBox(context, exp);
-      //   success = false;
-      // }
-      // if (success) {
-      //   String json;
-      //   try {
-      //     json =
-      //         await Provider.of<ServerRequests>(context, listen: false).getUser(
-      //       store.getString('token'),
-      //     );
-      //   } on PlatformException catch (e) {
-      //     print(e.code);
-      //     //TODO:SERVER DOWN CLOSE APP
-      //     await errorBox(context, e);
-      //   }
-      //   if (json != null) {
-      //     Provider.of<AppUser>(context, listen: false)
-      //         .fromServer(json); //SETTING THE AppUSER IN PROVIDER
-      //     //check profile complete or not
-      //     final jsonObj = jsonDecode(json);
-      //     if (jsonObj['data']['verified'] == false) {
-      //       //Email & Pass SignUp
-      //       //EMAIL LEFT ->Phone and hostel left
-      //       bool success1;
-      //       try {
-      //         success1 =
-      //             await Provider.of<ServerRequests>(context, listen: false)
-      //                 .regenerateOtp();
-      //       } on PlatformException catch (e) {
-      //         print(e.code);
-      //         //TODO ASK WHAT AGAIN SIGN OR what
-      //         //CRASH APP ERROR
-      //         await errorBox(context, e);
-      //         success1 = false;
-      //       }
-      //       if (success1) {
-      //         Navigator.pushReplacement(
-      //           context,
-      //           MaterialPageRoute(
-      //             builder: (BuildContext context) => OTP2(),
-      //           ),
-      //         );
-      //       }
-      //     } else if (jsonObj['data']['verified'] == true &&
-      //         jsonObj['data']['phone'] == null) {
-      //       //Email verified
-      //       //PHONE AND HOSTEL LEFT
-      //       Navigator.pushReplacement(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (BuildContext context) => OTP1(),
-      //         ),
-      //       );
-      //     } else {
-      //       //FULL USER PROFILE COMPLETE
-      //       //SHOPKEEPER CHECK
-      //       List<dynamic> shopkeeperShops = jsonObj['data']['shops'];
-      //       if (store.getBool('userType') == false && shopkeeperShops.isEmpty) {
-      //         Navigator.pushReplacement(
-      //           context,
-      //           MaterialPageRoute(
-      //             builder: (BuildContext context) => ShopProfile(),
-      //           ),
-      //         );
-      //       } else {
-      //         //GET ALL SHOPS
-      //         // final List<dynamic> list =
-      //         //     await widget.serverRequests.getShops(store.getString('token'));
-      //         // list.forEach((element) {
-      //         //   Shop.fromjson(element);
-      //         //   shops.add(Shop.fromjson(element));
-      //         // });
-      //         Navigator.pushReplacement(
-      //           context,
-      //           MaterialPageRoute(
-      //             builder: (BuildContext context) => HomePage(),
-      //           ),
-      //         );
-      //       }
-      //     }
-      //   }
-      // }
+      // print("From Login NOT IMPLEMENTED YET");
+      try {
+        success = await Provider.of<ServerRequests>(context, listen: false)
+            .login(Provider.of<AppUser>(context, listen: false));
+      } on PlatformException catch (exp) {
+        Navigator.pop(context);
+        //SHOW ERROR
+        await errorBox(context, exp);
+        success = false;
+      }
+      if (success) {
+        final String token = store.getString('token');
+        print('TOKEN : $token ');
+        if (token != null) {
+          //USER SIGNED IN SERVER
+          String json;
+          try {
+            json = await Provider.of<ServerRequests>(context, listen: false)
+                .getUser(token);
+          } on PlatformException catch (e) {
+            print(e.code);
+            //SERVER DOWN CLOSE APP
+            await errorBox(context, e);
+          }
+          if (json != null) {
+            Provider.of<AppUser>(context, listen: false)
+                .fromServer(json); //SETTING THE AppUSER IN PROVIDER
+            Provider.of<AppUser>(context, listen: false).printUser();
+            //check profile complete or not
+            final jsonObj = jsonDecode(json);
+            if (jsonObj['data']['username'] == null) {
+              //Email verified
+              //Start from Username and Pic
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => MainScreen(
+                    page: 2,
+                  ),
+                ),
+              );
+            } else if (jsonObj['data']['username'] != null &&
+                jsonObj['data']['gender'] == null) {
+              //Email and Username done
+              //Start from Gender
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => MainScreen(
+                    page: 3,
+                  ),
+                ),
+              );
+            } else if (jsonObj['data']['username'] != null &&
+                jsonObj['data']['gender'] != null &&
+                jsonObj['data']['phone'] == null) {
+              //Email, Username And Gender done
+              //Start from Phone
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => MainScreen(
+                    page: 4,
+                  ),
+                ),
+              );
+            } else if (jsonObj['data']['username'] != null &&
+                jsonObj['data']['gender'] != null &&
+                jsonObj['data']['phone'] != null &&
+                jsonObj['data']['weight'] == null) {
+              //Email, Username, Gender And Phone done
+              //Start from Weight
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => MainScreen(
+                    page: 5,
+                  ),
+                ),
+              );
+            } else if (jsonObj['data']['username'] != null &&
+                jsonObj['data']['gender'] != null &&
+                jsonObj['data']['phone'] != null &&
+                jsonObj['data']['weight'] != null &&
+                jsonObj['data']['height'] == null) {
+              //Email, Username, Gender, Phone And Weight done
+              //Start from Height
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => MainScreen(
+                    page: 6,
+                  ),
+                ),
+              );
+            } else {
+              //FULL USER PROFILE COMPLETE
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => MainAppScreen(), //Dasboard
+                ),
+              );
+            }
+          }
+        }
+      }
     } else {
-      //REGISTER
-      print("From Register NOT IMPLEMENTED YET");
-      // try {
-      //   success = await Provider.of<ServerRequests>(context, listen: false)
-      //       .registerForm(Provider.of<AppUser>(context,
-      //           listen: false)); //SEND EMAIL OTP FROM SERVER
-      // } on PlatformException catch (exp) {
-      //   Navigator.pop(context); //Remove Circular Indicator
-      //   //SHOW ERROR
-      //   await errorBox(context, exp);
-      //   success = false;
-      // }
-      // if (success) {
-      //   //FIREBASE REGISTER Call
-      //   await Provider.of<Auth>(context, listen: false).formAuth(
-      //       email: _email, password: _password); //This Will never throw error
-      //   Navigator.pushAndRemoveUntil(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) => MainScreen(),
-      //     ),
-      //     (_) => false,
-      //   );
-      // }
+      //Form REGISTER
+      print("From Email verification NOT IMPLEMENTED YET");
+      try {
+        success = await Provider.of<ServerRequests>(context, listen: false)
+            .registerForm(Provider.of<AppUser>(context,
+                listen: false)); //SEND EMAIL OTP FROM SERVER
+      } on PlatformException catch (exp) {
+        Navigator.pop(context); //Remove Circular Indicator
+        //SHOW ERROR
+        await errorBox(context, exp);
+        success = false;
+      }
+      if (success) {
+        //FIREBASE REGISTER Call
+        await Provider.of<Auth>(context, listen: false).formAuth(
+            email: _email, password: _password); //This Will never throw error
+        Navigator.pushAndRemoveUntil(
+            context,
+            fadeTransition(
+              page: MainScreen(),
+              duration: Duration(milliseconds: 800),
+            ),
+            (route) => false);
+      }
     }
-    Navigator.pop(context); //TODO: Remove after implementation
   }
 
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    _page = widget.type;
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
@@ -202,14 +224,24 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _emailFocus.dispose();
+    _passFocus.dispose();
+    _cPasswordFocus.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     boxSizeH = SizeConfig.safeBlockHorizontal;
     boxSizeV = SizeConfig.safeBlockVertical;
     return WillPopScope(
       //Back to START Screen
-      onWillPop: () => Future.delayed(
-          Duration(), () => false), //TODO: CHANGE After Start screen
+      onWillPop: () => Future.delayed(Duration(), () => true),
       child: SafeArea(
         child: Scaffold(
           body: Container(
@@ -232,7 +264,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   onTap: () async {
                     //Back to START Screen
                     print('BACK TO START SCREEN');
-                    // Navigator.pop(context);//TODO: CHANGE After Start screen
+                    Navigator.pop(context);
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -246,7 +278,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                 ),
                 AnimatedSwitcher(
-                  duration: Duration(seconds: 1),
+                  duration: Duration(milliseconds: 800),
                   transitionBuilder: (child, animation) => FadeTransition(
                     opacity: animation,
                     child: child,
@@ -657,31 +689,175 @@ class _AuthScreenState extends State<AuthScreen> {
                                                 listen: false)
                                             .fromFirebase(
                                                 firebaseUser); //Setting profile for user
-                                        bool success = true;
+                                        bool success;
                                         if (_page) {
                                           //LOGIN
-                                          print(
-                                              "Google Login NOT IMPLEMENTED YET But will create firbase user");
-                                          //Same above login code
+                                          try {
+                                            success = await Provider.of<
+                                                        ServerRequests>(context,
+                                                    listen: false)
+                                                .login(Provider.of<AppUser>(
+                                                    context,
+                                                    listen: false));
+                                          } on PlatformException catch (exp) {
+                                            Navigator.pop(context);
+                                            //SHOW ERROR
+                                            await errorBox(context, exp);
+                                            success = false;
+                                          }
+                                          if (success) {
+                                            final String token =
+                                                store.getString('token');
+                                            print('TOKEN : $token ');
+                                            if (token != null) //always not null
+                                            {
+                                              //USER SIGNED IN SERVER
+                                              String json;
+                                              try {
+                                                json = await Provider.of<
+                                                            ServerRequests>(
+                                                        context,
+                                                        listen: false)
+                                                    .getUser(token);
+                                              } on PlatformException catch (e) {
+                                                print(e.code);
+                                                //SERVER DOWN CLOSE APP
+                                                await errorBox(context, e);
+                                              }
+                                              if (json != null) {
+                                                Provider.of<AppUser>(context,
+                                                        listen: false)
+                                                    .fromServer(
+                                                        json); //SETTING THE AppUSER IN PROVIDER
+                                                //check profile complete or not
+                                                final jsonObj =
+                                                    jsonDecode(json);
+                                                if (jsonObj['data']
+                                                        ['username'] ==
+                                                    null) {
+                                                  //Email verified
+                                                  //Start from Username and Pic
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          MainScreen(
+                                                        page: 2,
+                                                      ),
+                                                    ),
+                                                  );
+                                                } else if (jsonObj['data']
+                                                            ['username'] !=
+                                                        null &&
+                                                    jsonObj['data']['gender'] ==
+                                                        null) {
+                                                  //Email and Username done
+                                                  //Start from Gender
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          MainScreen(
+                                                        page: 3,
+                                                      ),
+                                                    ),
+                                                  );
+                                                } else if (jsonObj['data']
+                                                            ['username'] !=
+                                                        null &&
+                                                    jsonObj['data']['gender'] !=
+                                                        null &&
+                                                    jsonObj['data']['phone'] ==
+                                                        null) {
+                                                  //Email, Username And Gender done
+                                                  //Start from Phone
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          MainScreen(
+                                                        page: 4,
+                                                      ),
+                                                    ),
+                                                  );
+                                                } else if (jsonObj['data']
+                                                            ['username'] !=
+                                                        null &&
+                                                    jsonObj['data']['gender'] !=
+                                                        null &&
+                                                    jsonObj['data']['phone'] !=
+                                                        null &&
+                                                    jsonObj['data']['weight'] ==
+                                                        null) {
+                                                  //Email, Username, Gender And Phone done
+                                                  //Start from Weight
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          MainScreen(
+                                                        page: 5,
+                                                      ),
+                                                    ),
+                                                  );
+                                                } else if (jsonObj['data']
+                                                            ['username'] !=
+                                                        null &&
+                                                    jsonObj['data']['gender'] !=
+                                                        null &&
+                                                    jsonObj['data']['phone'] !=
+                                                        null &&
+                                                    jsonObj['data']['weight'] !=
+                                                        null &&
+                                                    jsonObj['data']['height'] ==
+                                                        null) {
+                                                  //Email, Username, Gender, Phone And Weight done
+                                                  //Start from Height
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          MainScreen(
+                                                        page: 6,
+                                                      ),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  //FULL USER PROFILE COMPLETE
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          MainAppScreen(), //Dasboard
+                                                    ),
+                                                  );
+                                                }
+                                              }
+                                            }
+                                          }
                                         } else {
                                           //REGISTER
-                                          print(
-                                              "Google Register IMPLEMENTED But not at server side, will create firbase user and navigate");
-                                          // try {
-                                          //   success = await Provider.of<
-                                          //               ServerRequests>(context,
-                                          //           listen: false)
-                                          //       .registerGoogle(Provider.of<
-                                          //               AppUser>(context,
-                                          //           listen:
-                                          //               false)); //CHECKS FOR DUPLICATE USER
-                                          // } on PlatformException catch (exp) {
-                                          //   Navigator.pop(
-                                          //       context); //Remove Circular Indicator
-                                          //   //SHOW ERROR
-                                          //   await errorBox(context, exp);
-                                          //   success = false;
-                                          // }
+                                          try {
+                                            success = await Provider.of<
+                                                        ServerRequests>(context,
+                                                    listen: false)
+                                                .registerGAuth(Provider.of<
+                                                        AppUser>(context,
+                                                    listen:
+                                                        false)); //CHECKS FOR DUPLICATE USER
+                                          } on PlatformException catch (exp) {
+                                            Navigator.pop(
+                                                context); //Remove Circular Indicator
+                                            //SHOW ERROR
+                                            await errorBox(context, exp);
+                                            success = false;
+                                          }
                                           if (success) {
                                             //Registration Complete
                                             Provider.of<AppUser>(context,
@@ -689,11 +865,10 @@ class _AuthScreenState extends State<AuthScreen> {
                                                 .printUser();
                                             Navigator.of(context)
                                                 .pushAndRemoveUntil(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MainScreen(
-                                                  page: 2,
-                                                ),
+                                              fadeTransition(
+                                                page: MainScreen(page: 2),
+                                                duration:
+                                                    Duration(milliseconds: 800),
                                               ),
                                               (_) => false,
                                             );

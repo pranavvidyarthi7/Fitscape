@@ -7,7 +7,8 @@ import '../../../Variables.dart';
 
 class PhoneAuth extends StatefulWidget {
   final Function(PhoneNumber) change;
-  PhoneAuth({this.change});
+  final String phone;
+  PhoneAuth({this.change, this.phone});
   @override
   _PhoneAuthState createState() => _PhoneAuthState();
 }
@@ -17,7 +18,16 @@ class _PhoneAuthState extends State<PhoneAuth> {
   @override
   void initState() {
     phoneController = TextEditingController();
+    if (widget.phone != null)
+      phoneController.text =
+          PhoneNumber(phoneNumber: widget.phone).parseNumber();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    super.dispose();
   }
 
   @override
@@ -63,7 +73,6 @@ class _PhoneAuthState extends State<PhoneAuth> {
               textFieldController: phoneController,
               autoValidateMode: AutovalidateMode.onUserInteraction,
               // selectorTextStyle: josefinSansSB20.copyWith(color: Colors.black),
-              autoFocus: true,
               keyboardAction: TextInputAction.done,
               // textStyle: josefinSansSB20.copyWith(color: Colors.black),
               inputDecoration: InputDecoration(
