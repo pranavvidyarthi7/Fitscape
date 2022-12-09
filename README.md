@@ -28,9 +28,9 @@ Calculate the body mass index (BMI)
 **Database:** Mongo Atlas
 
 ## App Screenshots
-
+<p float="left">
 <img src="https://github.com/pranavvidyarthi7/Fitscape/blob/master/SS1.PNG" width="450" height="350" />                              <img src="https://github.com/pranavvidyarthi7/Fitscape/blob/master/SS2.PNG" width="450" height="350"/>
-
+</p>
 
 ## Contributors
 Backend - Esha Sherring
