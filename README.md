@@ -43,6 +43,9 @@ Postman Documentation: [https://documenter.getpostman.com/view/12382157/2s8YzXuz
   - Server automatically restarts when any of the files are changed
 
 
+## 3. Input/Output
+<img src="https://github.com/pranavvidyarthi7/Fitscape/blob/master/IO.PNG" width="400" height="200" />  
+
 ## Screenshot of the Interface
 <p float="left">
 <img src="https://github.com/pranavvidyarthi7/Fitscape/blob/master/SS1.PNG" width="400" height="350" />                              <img src="https://github.com/pranavvidyarthi7/Fitscape/blob/master/SS2.PNG" width="400" height="350"/>
