@@ -2,6 +2,7 @@
 # Title: Fitscape
 
 ## 1. Methodology
+![](methodology.jpeg)
 
 ## 2. Description
 Fitscape is an integrative health and fitness app that includes various facets of a healthy lifestyle on one platform. It has holistic health offerings across physical fitness and workouts, healthy food stats and other related events. 
@@ -44,7 +45,7 @@ Postman Documentation: [https://documenter.getpostman.com/view/12382157/2s8YzXuz
 
 ## Screenshot of the Interface
 <p float="left">
-<img src="https://github.com/pranavvidyarthi7/Fitscape/blob/master/SS1.PNG" width="450" height="350" />                              <img src="https://github.com/pranavvidyarthi7/Fitscape/blob/master/SS2.PNG" width="450" height="350"/>
+<img src="https://github.com/pranavvidyarthi7/Fitscape/blob/master/SS1.PNG" width="400" height="350" />                              <img src="https://github.com/pranavvidyarthi7/Fitscape/blob/master/SS2.PNG" width="400" height="350"/>
 </p>
 
 ### Contributors
