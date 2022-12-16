@@ -31,7 +31,7 @@ Postman Documentation: [https://documenter.getpostman.com/view/12382157/2s8YzXuz
 
 ### Setting up the project
 
-- Clone this repository: `https://github.com/mac2503/e-tiet2.git`
+- Clone this repository: `https://github.com/pranavvidyarthi7/Fitscape`
 - Create .env file in the root directory of the project
 - Install node.js and npm on your local machine
 - Install the dependencies: `npm install`
