@@ -23,9 +23,6 @@ Calculate the body mass index (BMI)
 - Node - Backend JS runtime
 - Stripe - Payment API
 
-### API Reference
-
-Postman Documentation: [https://documenter.getpostman.com/view/12382157/2s8YzXuzFZ](https://documenter.getpostman.com/view/12382157/2s8YzXuzFZ)
 
 ### How to build and run this project
 
